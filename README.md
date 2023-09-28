@@ -2,7 +2,7 @@
 
 A maven plugin that checks given commit messages
 
-In our company, for out maven projects, we use js solutions for commit message convention checking, so i wanted to write
+In our company, for our maven projects, we use js solutions for commit message convention checking, so i wanted to write
 a maven plugin to do it. My aim is that this plugin should do pretty much same job as the configuration right now.
 
 ## Comparison With CommitLint's [config-convention](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#commitlintconfig-conventional)
