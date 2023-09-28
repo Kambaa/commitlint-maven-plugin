@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class StringCaseValidator implements CommitTextValidator {
+public class CaseValidator implements CommitTextValidator {
 
     public enum Case {
         UPPERCASE, LOWERCASE,
@@ -29,7 +29,7 @@ public class StringCaseValidator implements CommitTextValidator {
 
     private List<Case> selectedCases = Collections.singletonList(Case.NONE);
 
-    public StringCaseValidator(String... args) {
+    public CaseValidator(String... args) {
         if (null != args && args.length > 0) {
             selectedCases = new ArrayList<>();
             for (int i = 0; i < args.length; i++) {

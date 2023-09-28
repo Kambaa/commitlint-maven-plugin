@@ -1,19 +1,19 @@
 package dev.kambaabi;
 
-import dev.kambaabi.validator.StringCaseValidator;
+import dev.kambaabi.validator.CaseValidator;
 
 public class CaptureGroup {
-    private StringCaseValidator.Case caseFormat = StringCaseValidator.Case.NONE;
+    private CaseValidator.Case caseFormat = CaseValidator.Case.NONE;
     private int max = Integer.MAX_VALUE;
     private int min = 0;
 
-    public CaptureGroup(StringCaseValidator.Case caseFormat, int max, int min) {
+    public CaptureGroup(CaseValidator.Case caseFormat, int max, int min) {
         this.caseFormat = caseFormat;
         this.max = max;
         this.min = min;
     }
 
-    public StringCaseValidator.Case getCaseFormat() {
+    public CaseValidator.Case getCaseFormat() {
         return caseFormat;
     }
 

@@ -2,11 +2,11 @@ package dev.kambaabi.validator;
 
 import org.apache.maven.plugin.MojoFailureException;
 
-public class StringLengthValidator implements CommitTextValidator {
+public class LengthValidator implements CommitTextValidator {
 
     private int min, max;
 
-    public StringLengthValidator(String... args) {
+    public LengthValidator(String... args) {
         this.min = Integer.parseInt(args[0]);
         this.max = Integer.parseInt(args[1]);
     }

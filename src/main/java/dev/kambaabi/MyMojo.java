@@ -1,6 +1,6 @@
 package dev.kambaabi;
 
-import dev.kambaabi.validator.ConventionalCommitsRegexValidator;
+import dev.kambaabi.validator.RegexValidator;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -76,10 +76,10 @@ public class MyMojo extends AbstractMojo {
 //                throw new MojoFailureException(String.format("Message did not matched the following pattern: %s", matchPattern));
 //            }
 
-            ConventionalCommitsRegexValidator ccrv = new ConventionalCommitsRegexValidator();
-            if (!ccrv.validate(commitMessage)) {
+            RegexValidator regexValidator = new RegexValidator(matchPattern);
+            if (!regexValidator.validate(commitMessage)) {
                 String msg1 = String.format("CommitLint validation error:");
-                String msg2 = String.format("Validation: %s", ccrv.getClass().getSimpleName());
+                String msg2 = String.format("Validation: %s(`%s`)", regexValidator.getClass().getSimpleName(), matchPattern);
 
                 getLog().error(msg1);
                 getLog().error(msg2);
