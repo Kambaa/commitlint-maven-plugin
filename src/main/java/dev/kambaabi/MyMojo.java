@@ -21,13 +21,16 @@ public class MyMojo extends AbstractMojo {
     private boolean skip;
 
     @Parameter
-    private String testCommitMessage = "feat(SCOPE)!: örnek deneme\nsenin Allah bildiği gibi yapsın";
+    private String testCommitMessage = "feat(SCOPE)!: ornek deneme\nseni Allah bildiği gibi yapsın\n";
 
     @Parameter
     private boolean failOnError;
 
     @Parameter
-    private String matchPattern = "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ])+([\\s\\S]*)";
+    private final String regexOld = "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ])+([\\s\\S]*)";
+
+    private final String regex = "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ]+)(\\n[\\s\\S]*)?";
+
 
     @Parameter
     private CaptureGroup[] captureGroups = new CaptureGroup[0];
@@ -38,23 +41,6 @@ public class MyMojo extends AbstractMojo {
     @Parameter(property = "scope")
     String scope;
 
-
-    /**
-     * Extract content from special characters.
-     *
-     * @param capturedString entire commit message
-     * @return the pattern matched string
-     * @throws MojoFailureException When Mojo failed
-     */
-    private String extractContent(final String capturedString) throws MojoFailureException {
-        final Pattern pattern = Pattern.compile("[\\w\\d\\s-_]+");
-        final Matcher matcher = pattern.matcher(capturedString);
-
-        if (!matcher.find()) {
-            throw new MojoFailureException(String.format("No content found [%s]", capturedString));
-        }
-        return matcher.group().trim();
-    }
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -76,10 +62,10 @@ public class MyMojo extends AbstractMojo {
 //                throw new MojoFailureException(String.format("Message did not matched the following pattern: %s", matchPattern));
 //            }
 
-            RegexValidator regexValidator = new RegexValidator(matchPattern);
+            RegexValidator regexValidator = new RegexValidator(regexOld);
             if (!regexValidator.validate(commitMessage)) {
                 String msg1 = String.format("CommitLint validation error:");
-                String msg2 = String.format("Validation: %s(`%s`)", regexValidator.getClass().getSimpleName(), matchPattern);
+                String msg2 = String.format("Validation: %s(`%s`)", regexValidator.getClass().getSimpleName(), regex);
 
                 getLog().error(msg1);
                 getLog().error(msg2);
@@ -88,14 +74,17 @@ public class MyMojo extends AbstractMojo {
                 throw new MojoFailureException(msg1 + " " + msg2);
             }
 
-//            for (int i = 0; i <= matcher.groupCount(); i++) {
-//                getLog().info(String.format("Matcher Group %d is: [%s]", i, matcher.group(i)));
-//
+            final Pattern pattern = Pattern.compile(this.regex);
+            Matcher matcher = pattern.matcher(commitMessage);
+            if (matcher.matches()) {
+                for (int i = 0; i <= matcher.groupCount(); i++) {
+                    getLog().info(String.format("Matcher Group %d is: [%s]", i, matcher.group(i)));
 ////                final String extractedContent = extractContent(matcher.group(i));
 ////                this.getLog().debug(extractedContent);
 ////                final RuleChecker checker = new RuleChecker(captureGroups[i - 1], this.getLog());
 ////                result += checker.check(extractedContent);
-//            }
+                }
+            }
             if (0 == result) {
                 return;
             }
@@ -113,4 +102,23 @@ public class MyMojo extends AbstractMojo {
                 .count();
         getLog().info("Number of dependencies: " + numDependencies);
     }
+
+
+    /**
+     * Extract content from special characters.
+     *
+     * @param capturedString entire commit message
+     * @return the pattern matched string
+     * @throws MojoFailureException When Mojo failed
+     */
+    private String extractContent(final String capturedString) throws MojoFailureException {
+        final Pattern pattern = Pattern.compile("[\\w\\d\\s-_]+");
+        final Matcher matcher = pattern.matcher(capturedString);
+
+        if (!matcher.find()) {
+            throw new MojoFailureException(String.format("No content found [%s]", capturedString));
+        }
+        return matcher.group().trim();
+    }
+
 }
