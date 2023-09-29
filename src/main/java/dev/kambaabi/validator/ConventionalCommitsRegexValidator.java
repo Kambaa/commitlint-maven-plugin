@@ -1,5 +1,7 @@
 package dev.kambaabi.validator;
 
+import org.apache.maven.plugin.logging.Log;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,11 +30,21 @@ public class ConventionalCommitsRegexValidator implements CommitTextValidator {
      */
     private final String regex = "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ]+)(\\n[\\s\\S]*)?";
 
-    private final Pattern pattern = Pattern.compile(regex);
+    /**
+     * This one matches 5 groups which can be used individually for extensive checking.
+     * Matcher Group 1 is: [feat]
+     * Matcher Group 2 is: [SCOPE]
+     * Matcher Group 3 is: [!]
+     * Matcher Group 4 is: [ornek deneme]
+     * Matcher Group 5 is: [\nseni Allah bildiği gibi yapsın\n\m]
+     */
+    private final String regex2 = "^(\\w*)(?:\\(([\\w\\-.]+)\\))?(!)?: ([\\w ]+)(\\n[\\s\\S]*)?";
+
+    private final Pattern pattern = Pattern.compile(regex2);
 
 
     @Override
-    public boolean validate(String value) {
+    public boolean validate(String value, Log log) {
         Matcher matcher = pattern.matcher(value);
         return matcher.matches();
     }

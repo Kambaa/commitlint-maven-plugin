@@ -1,6 +1,4 @@
-package dev.kambaabi;
-
-import dev.kambaabi.validator.CaseValidator;
+package dev.kambaabi.validator;
 
 public class CaptureGroup {
     private CaseValidator.Case caseFormat = CaseValidator.Case.NONE;

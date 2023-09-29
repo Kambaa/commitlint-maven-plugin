@@ -1,6 +1,7 @@
 package dev.kambaabi.validator;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 
 public class LengthValidator implements CommitTextValidator {
 
@@ -20,7 +21,7 @@ public class LengthValidator implements CommitTextValidator {
     }
 
     @Override
-    public boolean validate(String value) throws MojoFailureException {
+    public boolean validate(String value, Log log) throws MojoFailureException {
         if (min == 0 && max == 0) {
             throw new MojoFailureException("Please assign a value to at least one of the min or max!");
         }

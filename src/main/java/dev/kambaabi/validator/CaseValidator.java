@@ -1,6 +1,7 @@
 package dev.kambaabi.validator;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +40,7 @@ public class CaseValidator implements CommitTextValidator {
     }
 
     @Override
-    public boolean validate(String value) throws MojoFailureException {
+    public boolean validate(String value, Log log) throws MojoFailureException {
         boolean result = true;
         for (int i = 0; i < selectedCases.size(); i++) {
             Case pattern = selectedCases.get(i);

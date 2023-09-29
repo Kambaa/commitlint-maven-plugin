@@ -1,29 +1,21 @@
 package dev.kambaabi.validator;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class RegexValidator implements CommitTextValidator {
 
-    private List<Pattern> patterns = new ArrayList<>();
+    private final Pattern pattern;
 
     public RegexValidator(String... args) {
-        for (String regex : args) {
-            patterns.add(Pattern.compile(regex));
-        }
+        pattern = Pattern.compile(args[0]);
     }
 
     @Override
-    public boolean validate(String value) throws MojoFailureException {
-        boolean out = true;
-        if (patterns.size() > 0) {
-            for (Pattern pattern : patterns) {
-                out = out && pattern.matcher(value).matches();
-            }
-        }
-        return out;
+    public boolean validate(String value, Log log) throws MojoFailureException {
+        return pattern.matcher(value).matches();
+
     }
 }
