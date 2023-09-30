@@ -26,7 +26,7 @@ import java.util.regex.PatternSyntaxException;
 
 import static dev.kambaabi.Utils.isNonEmptyArray;
 
-@Mojo(name = "check", requiresDependencyResolution = ResolutionScope.RUNTIME, defaultPhase = LifecyclePhase.COMPILE)
+@Mojo(name = "check", requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, defaultPhase = LifecyclePhase.COMPILE)
 public class MyMojo extends AbstractMojo {
 
     @Parameter
@@ -111,21 +111,15 @@ public class MyMojo extends AbstractMojo {
                     for (ValidationConfig validationConfig : validationConfigList) {
 
                         debug("ValidationConfig ITERATION START!");
-                        debug("Classname to check" + validationConfig.getClassName());
+                        debug("Classname to check: " + validationConfig.getClassName());
                         debug("Arg size: " + validationConfig.getArgs().size());
                         debug("First Arg is" + validationConfig.getArgs().get(0));
                         debug("Level: " + validationConfig.getLevel());
 
-                        try {
-                            getClassLoader().loadClass(validationConfig.getClassName());
-                            Class<?> clazz = Class.forName(validationConfig.getClassName());
-                            debug("Loaded class: " + clazz.getName());
-                        } catch (Exception e) {
-                            error("Class not found: " + e.getMessage());
-                            throw new MojoFailureException(e.getMessage());
-                        }
 
-                        Class<CommitTextValidator> clazz = (Class<CommitTextValidator>) Class.forName(validationConfig.getClassName());
+                        Class<CommitTextValidator> clazz = (Class<CommitTextValidator>) getClassLoader().loadClass(validationConfig.getClassName());
+                        debug("Loaded class: " + clazz.getName());
+
                         debug("There are %d args defined for %s ", isNonEmptyArray(validationConfig.getArgs()) ?
                                 validationConfig.getArgs().size() : 0, validationConfig.getClassName());
                         String[] args = isNonEmptyArray(validationConfig.getArgs()) ? (String[]) validationConfig.getArgs().toArray() : new String[0];
@@ -133,6 +127,9 @@ public class MyMojo extends AbstractMojo {
                         boolean result = validator.validate(captureGroup);
                         debug("[%s] %s validation result: %s", validationConfig.getLevel(), validationConfig.getClassName(), result);
                         warn("[%s] %s validation result: %s", validationConfig.getLevel(), validationConfig.getClassName(), result);
+                        if (!result) {
+                            throw new MojoFailureException("failed commit message checks!");
+                        }
                     }
 
 //                    info("Matcher Group %d is: [%s]", i, matcher.group(i));
@@ -188,7 +185,6 @@ public class MyMojo extends AbstractMojo {
 
 //            Class<?> clazz = getClassLoader().loadClass(getCn());
 //            getLog().info("Loaded:" + clazz.toString());
-
 
             // Ensure that 'this.configuration' is not null before accessing its methods or fields.
             if (this.customConfig != null) {
