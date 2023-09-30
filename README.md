@@ -44,4 +44,6 @@ seni Allah bildiği gibi yapsın
 - https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#rules
 - https://www.conventionalcommits.org/en/v1.0.0/
 - https://gist.github.com/marcojahn/482410b728c31b221b70ea6d2c433f0c
-- 
+
+- https://maven.apache.org/guides/mini/guide-maven-classloading.html
+- https://stackoverflow.com/a/77206769/1020512
