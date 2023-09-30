@@ -5,7 +5,6 @@ import dev.kambaabi.configuration.CustomConfig;
 import dev.kambaabi.configuration.RegexConfig;
 import dev.kambaabi.configuration.ValidationConfig;
 import dev.kambaabi.validator.CommitTextValidator;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -70,7 +69,7 @@ public class MyMojo extends AbstractMojo {
     private String projectJar;
 
 
-    private void validateWithRegexConfig(RegexConfig regexconfig, String commitMessage) throws MojoFailureException {
+    private void validateWithRegexConfig(RegexConfig regexconfig, String commitMessage) throws Exception {
         try {
             debug("Starting Regex Operation For: [%s] ", regexconfig.getValue());
             debug("Commit Message Is: [%s] ", commitMessage);
@@ -119,15 +118,17 @@ public class MyMojo extends AbstractMojo {
 
                         Class<CommitTextValidator> clazz = (Class<CommitTextValidator>) getClassLoader().loadClass(validationConfig.getClassName());
                         debug("Loaded class: " + clazz.getName());
-
                         debug("There are %d args defined for %s ", isNonEmptyArray(validationConfig.getArgs()) ?
                                 validationConfig.getArgs().size() : 0, validationConfig.getClassName());
-                        String[] args = isNonEmptyArray(validationConfig.getArgs()) ? (String[]) validationConfig.getArgs().toArray() : new String[0];
-                        CommitTextValidator validator = clazz.newInstance().createInstance();
+                        String[] args = isNonEmptyArray(validationConfig.getArgs()) ? validationConfig.getArgs().toArray(new String[validationConfig.getArgs().size()]) : new String[0];
+                        CommitTextValidator validator = clazz.newInstance().createInstance(args);
+                        debug("CommitTextValidator instance %s ", validator);
                         boolean result = validator.validate(captureGroup);
-                        debug("[%s] %s validation result: %s", validationConfig.getLevel(), validationConfig.getClassName(), result);
-                        warn("[%s] %s validation result: %s", validationConfig.getLevel(), validationConfig.getClassName(), result);
-                        if (!result) {
+                        debug("level: [%s] %s validation result for Capture Group %d [%s]: %s", validationConfig.getLevel(), validationConfig.getClassName(), i, captureGroup, result);
+                        if (!result && validationConfig.getLevel().equalsIgnoreCase("WARN")) {
+                            warn("[%s] %s validation result: %s", validationConfig.getLevel(), validationConfig.getClassName(), result);
+                        } else if (!result && validationConfig.getLevel().equalsIgnoreCase("ERROR")) {
+                            error("%s validation result for Capture Group %d [%s]: %s", validationConfig.getClassName(), i, captureGroup, result);
                             throw new MojoFailureException("failed commit message checks!");
                         }
                     }
@@ -140,38 +141,14 @@ public class MyMojo extends AbstractMojo {
                 }
             }
 
-
-        } catch (
-                PatternSyntaxException ex) {
+        } catch (PatternSyntaxException ex) {
             getLog().debug("PatternSyntaxException thrown! Generating Error Message And Throwing MojoFailureException!");
             String msg = String.format("Given Regex String Is Not Valid: [%s] ", regexconfig.getValue());
             getLog().error(msg);
             throw new MojoFailureException(ex.getLocalizedMessage());
-        } catch (
-                Exception e) {
-            new MojoFailureException(e);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            throw new MojoFailureException(e);
         }
-
-
-    }
-
-    private ClassLoader getClassLoader() {
-        ClassLoader classLoader = null;
-        try {
-            List<String> classpathElements = project.getRuntimeClasspathElements();
-            if (null == classpathElements) {
-                return Thread.currentThread().getContextClassLoader();
-            }
-            URL[] urls = new URL[classpathElements.size()];
-
-            for (int i = 0; i < classpathElements.size(); ++i) {
-                urls[i] = new File((String) classpathElements.get(i)).toURI().toURL();
-            }
-            classLoader = new URLClassLoader(urls, getClass().getClassLoader());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return classLoader;
     }
 
 
@@ -182,9 +159,6 @@ public class MyMojo extends AbstractMojo {
             return;
         }
         try {
-
-//            Class<?> clazz = getClassLoader().loadClass(getCn());
-//            getLog().info("Loaded:" + clazz.toString());
 
             // Ensure that 'this.configuration' is not null before accessing its methods or fields.
             if (this.customConfig != null) {
@@ -205,7 +179,7 @@ public class MyMojo extends AbstractMojo {
                 getLog().error("Configuration is null. Check your plugin configuration.");
             }
 
-            int result = 0;
+//            int result = 0;
 
 //            final Pattern pattern = Pattern.compile(this.matchPattern);
 //            Matcher matcher = pattern.matcher(commitMessage);
@@ -236,27 +210,16 @@ public class MyMojo extends AbstractMojo {
 //////                result += checker.check(extractedContent);
 //                }
 //            }
-            if (0 == result) {
-                return;
-            }
+//            if (0 == result) {
+//                return;
+//            }
             if (failOnError) {
                 throw new MojoFailureException("Commit Lint failed, please check rules");
             }
         } catch (
                 Exception ex) {
-            ex.printStackTrace();
             throw new MojoFailureException("Unable to lint commit message due to exception");
         }
-
-        List<Dependency> dependencies = project.getDependencies();
-        long numDependencies = dependencies.stream()
-                .filter(d -> (scope == null || scope.isEmpty()) || scope.equals(d.getScope()))
-                .count();
-
-        getLog().
-
-                info("Number of dependencies: " + numDependencies);
-
     }
 
 
@@ -341,5 +304,23 @@ public class MyMojo extends AbstractMojo {
         this.cn = cn;
     }
 
+    private ClassLoader getClassLoader() {
+        ClassLoader classLoader = null;
+        try {
+            List<String> classpathElements = project.getRuntimeClasspathElements();
+            if (null == classpathElements) {
+                return Thread.currentThread().getContextClassLoader();
+            }
+            URL[] urls = new URL[classpathElements.size()];
+
+            for (int i = 0; i < classpathElements.size(); ++i) {
+                urls[i] = new File((String) classpathElements.get(i)).toURI().toURL();
+            }
+            classLoader = new URLClassLoader(urls, getClass().getClassLoader());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return classLoader;
+    }
 
 }
