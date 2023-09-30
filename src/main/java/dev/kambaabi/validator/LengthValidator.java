@@ -6,9 +6,7 @@ public class LengthValidator implements CommitTextValidator {
 
     private int min, max;
 
-    public LengthValidator(String... args) {
-        this.min = Integer.parseInt(args[0]);
-        this.max = Integer.parseInt(args[1]);
+    public LengthValidator() {
     }
 
     public static boolean fitMax(final String text, final int max) {
@@ -20,8 +18,9 @@ public class LengthValidator implements CommitTextValidator {
     }
 
     @Override
-    public LengthValidator createInstance(String... args) {
-        return new LengthValidator(args);
+    public void registerArgs(String... args) {
+        this.min = Integer.parseInt(args[0]);
+        this.max = Integer.parseInt(args[1]);
     }
 
     @Override

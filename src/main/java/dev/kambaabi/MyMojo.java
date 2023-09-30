@@ -34,10 +34,6 @@ public class MyMojo extends AbstractMojo {
     @Parameter
     private String testCommitMessage = "feAt(SCOPE)!: ornek deneme\nseni Allah bildiği gibi yapsın\n";
 
-
-    @Parameter
-    private String cn;
-
     @Parameter
     private boolean failOnError;
 
@@ -46,10 +42,6 @@ public class MyMojo extends AbstractMojo {
 
 //    @Parameter
 //    private final String regex = "^(\\w*)(?:\\(([\\w\\-.]+)\\))?(!)?: ([\\w ]+)(\\n[\\s\\S]*)?";
-
-
-//    @Parameter
-//    private CaptureGroup[] captureGroups = new CaptureGroup[0];
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
@@ -120,24 +112,23 @@ public class MyMojo extends AbstractMojo {
                         debug("Loaded class: " + clazz.getName());
                         debug("There are %d args defined for %s ", isNonEmptyArray(validationConfig.getArgs()) ?
                                 validationConfig.getArgs().size() : 0, validationConfig.getClassName());
-                        String[] args = isNonEmptyArray(validationConfig.getArgs()) ? validationConfig.getArgs().toArray(new String[validationConfig.getArgs().size()]) : new String[0];
-                        CommitTextValidator validator = clazz.newInstance().createInstance(args);
+                        String[] args = new String[0];
+                        if (isNonEmptyArray(validationConfig.getArgs())) {
+                            debug("Validation config has argument values for %s, getting.", clazz.getName());
+                            args = validationConfig.getArgs().toArray(new String[0]);
+                        }
+                        CommitTextValidator validator = clazz.newInstance();
+                        validator.registerArgs(args);
                         debug("CommitTextValidator instance %s ", validator);
                         boolean result = validator.validate(captureGroup);
-                        debug("level: [%s] %s validation result for Capture Group %d [%s]: %s", validationConfig.getLevel(), validationConfig.getClassName(), i, captureGroup, result);
+                        debug("level: [%s] %s(%s) validation result for Capture Group %d [%s]: %s", validationConfig.getLevel(), validationConfig.getClassName(), String.join(",", validationConfig.getArgs()), i, captureGroup, result);
                         if (!result && validationConfig.getLevel().equalsIgnoreCase("WARN")) {
-                            warn("[%s] %s validation result: %s", validationConfig.getLevel(), validationConfig.getClassName(), result);
+                            warn("[%s] %s(%s) validation result: %s", validationConfig.getLevel(), validator.getClass().getSimpleName(), String.join(",", validationConfig.getArgs()), result);
                         } else if (!result && validationConfig.getLevel().equalsIgnoreCase("ERROR")) {
-                            error("%s validation result for Capture Group %d [%s]: %s", validationConfig.getClassName(), i, captureGroup, result);
+                            error("%s(%s) validation result for Capture Group %d [%s]: %s", validator.getClass().getSimpleName(), String.join(",", validationConfig.getArgs()), i, captureGroup, result);
                             throw new MojoFailureException("failed commit message checks!");
                         }
                     }
-
-//                    info("Matcher Group %d is: [%s]", i, matcher.group(i));
-//                    final String extractedContent = extractContent(matcher.group(i));
-//                    this.getLog().debug(extractedContent);
-//                    final RuleChecker checker = new RuleChecker(captureGroups[i - 1], this.getLog());
-//                    result += checker.check(extractedContent);
                 }
             }
 
@@ -151,7 +142,6 @@ public class MyMojo extends AbstractMojo {
         }
     }
 
-
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (skip) {
@@ -159,18 +149,14 @@ public class MyMojo extends AbstractMojo {
             return;
         }
         try {
-
             // Ensure that 'this.configuration' is not null before accessing its methods or fields.
             if (this.customConfig != null) {
-
                 String commitMessage = null;
                 if (null != this.testCommitMessage) {
                     commitMessage = this.testCommitMessage;
-//                    getLog().info(String.format("Use test commit message [%s]", this.testCommitMessage));
+                    warn("Checking given commit message:\n%s", testCommitMessage);
                 }
-
                 List<RegexConfig> regexConfigList = customConfig.getRegexes();
-//                getLog().error("REGEXLIST SIZE IS: " + customConfig.getRegexes().size());
                 for (RegexConfig regex : customConfig.getRegexes()) {
                     validateWithRegexConfig(regex, testCommitMessage);
                 }
@@ -178,41 +164,6 @@ public class MyMojo extends AbstractMojo {
                 // Handle the case where 'this.configuration' is null.
                 getLog().error("Configuration is null. Check your plugin configuration.");
             }
-
-//            int result = 0;
-
-//            final Pattern pattern = Pattern.compile(this.matchPattern);
-//            Matcher matcher = pattern.matcher(commitMessage);
-//            if (!matcher.matches()) {
-//                throw new MojoFailureException(String.format("Message did not matched the following pattern: %s", matchPattern));
-//            }
-
-//            RegexValidator regexValidator = new RegexValidator(regex);
-//            if (!regexValidator.validate(commitMessage, getLog())) {
-//                String msg1 = "CommitLint validation error:";
-//                String msg2 = String.format("Validation: %s(`%s`)", regexValidator.getClass().getSimpleName(), regex);
-//
-//                getLog().error(msg1);
-//                getLog().error(msg2);
-//                getLog().error(String.format("Failed commit message:\n%s", commitMessage));
-//                getLog().error("Please check your commit message.");
-//                throw new MojoFailureException(msg1 + " " + msg2);
-//            }
-//
-//            final Pattern pattern = Pattern.compile(this.regex);
-//            Matcher matcher = pattern.matcher(commitMessage);
-//            if (matcher.matches()) {
-//                for (int i = 0; i <= matcher.groupCount(); i++) {
-//                    getLog().info(String.format("Matcher Group %d is: [%s]", i, matcher.group(i)));
-//////                final String extractedContent = extractContent(matcher.group(i));
-//////                this.getLog().debug(extractedContent);
-//////                final RuleChecker checker = new RuleChecker(captureGroups[i - 1], this.getLog());
-//////                result += checker.check(extractedContent);
-//                }
-//            }
-//            if (0 == result) {
-//                return;
-//            }
             if (failOnError) {
                 throw new MojoFailureException("Commit Lint failed, please check rules");
             }
@@ -294,14 +245,6 @@ public class MyMojo extends AbstractMojo {
 
     public void setScope(String scope) {
         this.scope = scope;
-    }
-
-    public String getCn() {
-        return cn;
-    }
-
-    public void setCn(String cn) {
-        this.cn = cn;
     }
 
     private ClassLoader getClassLoader() {

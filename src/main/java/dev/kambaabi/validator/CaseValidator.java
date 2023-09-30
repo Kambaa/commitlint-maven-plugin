@@ -29,18 +29,17 @@ public class CaseValidator implements CommitTextValidator {
 
     private List<Case> selectedCases = Collections.singletonList(Case.NONE);
 
-    public CaseValidator(String... args) {
+    public CaseValidator() {
+    }
+
+    @Override
+    public void registerArgs(String... args) {
         if (null != args && args.length > 0) {
             selectedCases = new ArrayList<>();
             for (int i = 0; i < args.length; i++) {
                 selectedCases.add(Case.getCaseByString(args[i]));
             }
         }
-    }
-
-    @Override
-    public CaseValidator createInstance(String... args) {
-        return new CaseValidator(args);
     }
 
     @Override

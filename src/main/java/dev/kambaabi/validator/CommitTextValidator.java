@@ -1,7 +1,7 @@
 package dev.kambaabi.validator;
 
 public interface CommitTextValidator {
-    CommitTextValidator createInstance(String... args);
+    void registerArgs(String... args);
 
     boolean validate(String value) throws Exception;
 }

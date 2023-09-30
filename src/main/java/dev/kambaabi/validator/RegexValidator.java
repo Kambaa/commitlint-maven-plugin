@@ -6,15 +6,15 @@ import java.util.regex.Pattern;
 
 public class RegexValidator implements CommitTextValidator {
 
-    private final Pattern pattern;
+    private Pattern pattern;
 
-    public RegexValidator(String... args) {
-        pattern = Pattern.compile(args[0]);
+    public RegexValidator() {
+
     }
 
     @Override
-    public RegexValidator createInstance(String... args) {
-        return new RegexValidator(args);
+    public void registerArgs(String... args) {
+        pattern = Pattern.compile(args[0]);
     }
 
     @Override

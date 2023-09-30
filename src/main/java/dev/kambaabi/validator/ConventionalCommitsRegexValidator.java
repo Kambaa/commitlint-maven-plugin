@@ -40,13 +40,13 @@ public class ConventionalCommitsRegexValidator implements CommitTextValidator {
 
     private final Pattern pattern = Pattern.compile(regex2);
 
-    public ConventionalCommitsRegexValidator(String... args) {
+    public ConventionalCommitsRegexValidator() {
     }
 
 
     @Override
-    public ConventionalCommitsRegexValidator createInstance(String... args) {
-        return new ConventionalCommitsRegexValidator(args);
+    public void registerArgs(String... args) {
+
     }
 
     @Override
