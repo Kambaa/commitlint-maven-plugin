@@ -1,7 +1,6 @@
 package dev.kambaabi.validator;
 
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 
 import java.util.regex.Pattern;
 
@@ -14,7 +13,12 @@ public class RegexValidator implements CommitTextValidator {
     }
 
     @Override
-    public boolean validate(String value, Log log) throws MojoFailureException {
+    public RegexValidator createInstance(String... args) {
+        return new RegexValidator(args);
+    }
+
+    @Override
+    public boolean validate(String value) throws MojoFailureException {
         return pattern.matcher(value).matches();
 
     }

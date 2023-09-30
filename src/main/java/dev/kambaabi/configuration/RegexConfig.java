@@ -4,12 +4,12 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.util.List;
 
-public class Regex {
+public class RegexConfig {
     @Parameter
     private String value;
 
     @Parameter(property = "captureGroup")
-    private List<CaptureGroup> captureGroups;
+    private List<CaptureGroupConfig> captureGroupConfigs;
 
     public String getValue() {
         return value;
@@ -19,11 +19,11 @@ public class Regex {
         this.value = value;
     }
 
-    public List<CaptureGroup> getCaptureGroups() {
-        return captureGroups;
+    public List<CaptureGroupConfig> getCaptureGroups() {
+        return captureGroupConfigs;
     }
 
-    public void setCaptureGroups(List<CaptureGroup> captureGroups) {
-        this.captureGroups = captureGroups;
+    public void setCaptureGroups(List<CaptureGroupConfig> captureGroupConfigs) {
+        this.captureGroupConfigs = captureGroupConfigs;
     }
 }

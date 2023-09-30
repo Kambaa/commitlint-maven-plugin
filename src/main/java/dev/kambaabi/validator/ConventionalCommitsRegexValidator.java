@@ -1,7 +1,5 @@
 package dev.kambaabi.validator;
 
-import org.apache.maven.plugin.logging.Log;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,9 +40,17 @@ public class ConventionalCommitsRegexValidator implements CommitTextValidator {
 
     private final Pattern pattern = Pattern.compile(regex2);
 
+    public ConventionalCommitsRegexValidator(String... args) {
+    }
+
 
     @Override
-    public boolean validate(String value, Log log) {
+    public ConventionalCommitsRegexValidator createInstance(String... args) {
+        return new ConventionalCommitsRegexValidator(args);
+    }
+
+    @Override
+    public boolean validate(String value) {
         Matcher matcher = pattern.matcher(value);
         return matcher.matches();
     }

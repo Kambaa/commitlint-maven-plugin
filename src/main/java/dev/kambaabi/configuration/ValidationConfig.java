@@ -4,7 +4,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.util.List;
 
-public class Validation {
+public class ValidationConfig {
     @Parameter
     private String className;
 

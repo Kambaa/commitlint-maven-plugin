@@ -4,15 +4,15 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.util.List;
 
-public class CustomConfiguration {
+public class CustomConfig {
     @Parameter(property = "regex")
-    private List<Regex> regexes;
+    private List<RegexConfig> regexes;
 
-    public List<Regex> getRegexes() {
+    public List<RegexConfig> getRegexes() {
         return regexes;
     }
 
-    public void setRegexes(List<Regex> regexes) {
+    public void setRegexes(List<RegexConfig> regexes) {
         this.regexes = regexes;
     }
 }
