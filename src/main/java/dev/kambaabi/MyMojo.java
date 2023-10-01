@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import static dev.kambaabi.Utils.isNonEmptyArray;
+import static dev.kambaabi.Utils.stringNotEmpty;
 
 @Mojo(name = "check", requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, defaultPhase = LifecyclePhase.COMPILE)
 public class MyMojo extends AbstractMojo {
@@ -54,91 +55,77 @@ public class MyMojo extends AbstractMojo {
     private CustomConfig customConfig;
 
 
-    /**
-     * @parameter expression="${project.build.directory}/${project.build.finalName}.jar"
-     * @readonly
-     */
-    private String projectJar;
+    private ClassLoader customClassLoader;
 
 
     private void validateWithRegexConfig(RegexConfig regexconfig, String commitMessage) throws Exception {
-        try {
-            debug("Starting Regex Operation For: [%s] ", regexconfig.getValue());
-            debug("Commit Message Is: [%s] ", commitMessage);
-            final Pattern pattern = Pattern.compile(regexconfig.getValue());
-            debug("Compiled Pattern Is: [%s] ", pattern.pattern());
-            Matcher matcher = pattern.matcher(commitMessage);
-            debug("Is Pattern Matching A Success : [%s] ", matcher.matches());
-            if (!matcher.matches()) {
-                debug("Pattern Matching Failed, Throwing MojoFailureException Exception!");
-                throw new MojoFailureException(String.format("Commit Message did not matched the following pattern: [%s]", regexconfig.getValue()));
-            }
-//            debug("Configsize: %d, captureGroupsize: %d", regexconfig.getCaptureGroups().size(), matcher.groupCount());
+        debug("Starting Regex Operation For: [%s] ", regexconfig.getValue());
+        debug("Commit Message Is: [%s] ", commitMessage);
+        final Pattern pattern = Pattern.compile(regexconfig.getValue());
+        debug("Compiled Pattern Is: [%s] ", pattern.pattern());
+        Matcher matcher = pattern.matcher(commitMessage);
+        debug("Is Pattern Matching A Success : [%s] ", matcher.matches());
+        if (!matcher.matches()) {
+            debug("Pattern Matching Failed, Throwing MojoFailureException Exception!");
+            error("Pattern Matching For The Commit Message Failed!");
+            error("Commit Message: %s", commitMessage);
+            error("Regex: %s", pattern.pattern());
+            throw new MojoFailureException(String.format("Commit Message did not match!\nPattern: %s\nCommit Message: %s", pattern.pattern(), commitMessage));
+        }
+        debug("Configsize: %d, captureGroupsize: %d", regexconfig.getCaptureGroups().size(), matcher.groupCount());
 
-            if (!isNonEmptyArray(regexconfig.getCaptureGroups())) {
-                debug("No CaptureGroup Validations Configured given for this Regex!");
-            } else {
-                debug("%d CaptureGroup Validations Defined, %d CaptureGroup Generated From Regex Pattern", regexconfig.getCaptureGroups().size(), matcher.groupCount());
-                for (int i = 1; i <= Math.min(regexconfig.getCaptureGroups().size(), matcher.groupCount()); i++) {
-                    final int configIndex = i;
-                    Optional<CaptureGroupConfig> config = regexconfig.getCaptureGroups().stream()
-                            .filter(captureGroupConfig -> captureGroupConfig.getIndex() == configIndex).findAny();
-                    String captureGroup = matcher.group(i);
-                    if (null == captureGroup) {
-                        debug("%d. Capture Group is null, skipping.", i);
+        if (!isNonEmptyArray(regexconfig.getCaptureGroups())) {
+            debug("No CaptureGroup Validations Configured given for this Regex!");
+        } else {
+            debug("%d CaptureGroup Validations Defined, %d CaptureGroup Generated From Regex Pattern", regexconfig.getCaptureGroups().size(), matcher.groupCount());
+            for (int i = 1; i <= Math.min(regexconfig.getCaptureGroups().size(), matcher.groupCount()); i++) {
+                final int configIndex = i;
+                Optional<CaptureGroupConfig> config = regexconfig.getCaptureGroups().stream()
+                        .filter(captureGroupConfig -> captureGroupConfig.getIndex() == configIndex).findAny();
+                String captureGroup = matcher.group(i);
+                debug("Beginning Operations For Captrue Group %d:[%s]", i, captureGroup);
+                if (!config.isPresent()) {
+                    debug("Either capture group is empty or there's no validations defined for the capture group, skipping.");
+                    continue;
+                }
+                List<ValidationConfig> validationConfigList = config.get().getValidations();
+                if (!isNonEmptyArray(validationConfigList)) {
+                    debug("There's no validations defined for the capture group, skipping.");
+                    continue;
+                }
+                debug("There are %d validation(s) defined for the %d. CaptureGroup [%s], looping each one.",
+                        validationConfigList.size(), i, captureGroup);
+                for (ValidationConfig validationConfig : validationConfigList) {
+                    if (
+                            ValidationConfig.ValidationOpts.SKIP_IF_EMPTY.equals(validationConfig.getOpts()) ||
+                                    (!stringNotEmpty(captureGroup) && validationConfig.getOpts().equals(ValidationConfig.ValidationOpts.SKIP_IF_EMPTY))
+                    ) {
+                        debug("Validation Skip Conditions Met for Validation %s, %d. Capture Group [%s], Validation Opts %s", validationConfig.getClassName(), i, captureGroup, validationConfig.getOpts());
                         continue;
                     }
-                    if (!config.isPresent()) {
-                        debug("Either capture group is empty or there's no validations defined for the capture group, skipping.");
-                        continue;
+                    Class<CommitTextValidator> clazz = (Class<CommitTextValidator>) getClassLoader().loadClass(validationConfig.getClassName());
+                    debug("Loaded class: " + clazz.getName());
+                    String[] args = new String[0];
+                    if (isNonEmptyArray(validationConfig.getArgs())) {
+                        debug("Validation config has argument values for %s, getting.", clazz.getName());
+                        args = validationConfig.getArgs().toArray(new String[0]);
                     }
-                    List<ValidationConfig> validationConfigList = config.get().getValidations();
-                    if (!isNonEmptyArray(validationConfigList)) {
-                        debug("There's no validations defined for the capture group, skipping.");
-                        continue;
-                    }
-                    debug("There are %d validation(s) defined for the %d. CaptureGroup [%s], looping each one.",
-                            validationConfigList.size(), i, captureGroup);
-                    for (ValidationConfig validationConfig : validationConfigList) {
+                    debug("There are %d args defined for %s: [%s] ", args.length, validationConfig.getClassName(), String.join(",", args));
 
-                        debug("ValidationConfig ITERATION START!");
-                        debug("Classname to check: " + validationConfig.getClassName());
-                        debug("Arg size: " + validationConfig.getArgs().size());
-                        debug("First Arg is" + validationConfig.getArgs().get(0));
-                        debug("Level: " + validationConfig.getLevel());
-
-
-                        Class<CommitTextValidator> clazz = (Class<CommitTextValidator>) getClassLoader().loadClass(validationConfig.getClassName());
-                        debug("Loaded class: " + clazz.getName());
-                        debug("There are %d args defined for %s ", isNonEmptyArray(validationConfig.getArgs()) ?
-                                validationConfig.getArgs().size() : 0, validationConfig.getClassName());
-                        String[] args = new String[0];
-                        if (isNonEmptyArray(validationConfig.getArgs())) {
-                            debug("Validation config has argument values for %s, getting.", clazz.getName());
-                            args = validationConfig.getArgs().toArray(new String[0]);
-                        }
-                        CommitTextValidator validator = clazz.newInstance();
-                        validator.registerArgs(args);
-                        debug("CommitTextValidator instance %s ", validator);
-                        boolean result = validator.validate(captureGroup);
-                        debug("level: [%s] %s(%s) validation result for Capture Group %d [%s]: %s", validationConfig.getLevel(), validationConfig.getClassName(), String.join(",", validationConfig.getArgs()), i, captureGroup, result);
-                        if (!result && validationConfig.getLevel().equalsIgnoreCase("WARN")) {
-                            warn("[%s] %s(%s) validation result: %s", validationConfig.getLevel(), validator.getClass().getSimpleName(), String.join(",", validationConfig.getArgs()), result);
-                        } else if (!result && validationConfig.getLevel().equalsIgnoreCase("ERROR")) {
-                            error("%s(%s) validation result for Capture Group %d [%s]: %s", validator.getClass().getSimpleName(), String.join(",", validationConfig.getArgs()), i, captureGroup, result);
-                            throw new MojoFailureException("failed commit message checks!");
-                        }
+                    CommitTextValidator validator = clazz.newInstance();
+                    debug("Instance generated for %s", validator.getClass().getSimpleName());
+                    validator.registerArgs(args);
+                    debug("Args registered for the generated instance of %s: [%s]", validator.getClass().getSimpleName(), String.join(",", args));
+                    boolean result = validator.validate(captureGroup);
+                    debug("level: [%s] %s(%s) validation result for Capture Group %d [%s]: %s", validationConfig.getLevel(), validationConfig.getClassName(), String.join(",", args), i, captureGroup, result);
+                    if (!result && validationConfig.getLevel().equals(ValidationConfig.ValidationLevels.WARN)) {
+                        warn("[%s] %s(%s) validation result: %s", validationConfig.getLevel(), validator.getClass().getSimpleName(), String.join(",", args), result);
+                    } else if (!result && validationConfig.getLevel().equals(ValidationConfig.ValidationLevels.ERROR)) {
+                        error("%s(%s) validation result for Capture Group %d [%s]: %s", validator.getClass().getSimpleName(), String.join(",", args), i, captureGroup, result);
+                        throw new MojoFailureException("failed commit message checks!");
                     }
                 }
             }
-
-        } catch (PatternSyntaxException ex) {
-            getLog().debug("PatternSyntaxException thrown! Generating Error Message And Throwing MojoFailureException!");
-            String msg = String.format("Given Regex String Is Not Valid: [%s] ", regexconfig.getValue());
-            getLog().error(msg);
-            throw new MojoFailureException(ex.getLocalizedMessage());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            throw new MojoFailureException(e);
         }
     }
 
@@ -161,34 +148,19 @@ public class MyMojo extends AbstractMojo {
                     validateWithRegexConfig(regex, testCommitMessage);
                 }
             } else {
-                // Handle the case where 'this.configuration' is null.
-                getLog().error("Configuration is null. Check your plugin configuration.");
+                getLog().error("Configuration is null. Check your plugin configuration!");
+                throw new MojoFailureException("Configuration is null. Check your plugin configuration!s");
             }
             if (failOnError) {
                 throw new MojoFailureException("Commit Lint failed, please check rules");
             }
-        } catch (
-                Exception ex) {
-            throw new MojoFailureException("Unable to lint commit message due to exception");
+        } catch (PatternSyntaxException ex) {
+            debug("PatternSyntaxException thrown! regex: %s", ex.getPattern());
+            throw new MojoFailureException(ex.getLocalizedMessage());
+        } catch (Exception ex) {
+            throw new MojoFailureException("Unable to lint commit message due to exception!\n" + ex.getLocalizedMessage());
         }
-    }
 
-
-    /**
-     * Extract content from special characters.
-     *
-     * @param capturedString entire commit message
-     * @return the pattern matched string
-     * @throws MojoFailureException When Mojo failed
-     */
-    private String extractContent(final String capturedString) throws MojoFailureException {
-        final Pattern pattern = Pattern.compile("[\\w\\d\\s-_]+");
-        final Matcher matcher = pattern.matcher(capturedString);
-
-        if (!matcher.find()) {
-            throw new MojoFailureException(String.format("No content found [%s]", capturedString));
-        }
-        return matcher.group().trim();
     }
 
     public boolean isSkip() {
@@ -248,6 +220,9 @@ public class MyMojo extends AbstractMojo {
     }
 
     private ClassLoader getClassLoader() {
+        if (null != customClassLoader) {
+            return customClassLoader;
+        }
         ClassLoader classLoader = null;
         try {
             List<String> classpathElements = project.getRuntimeClasspathElements();
@@ -263,7 +238,7 @@ public class MyMojo extends AbstractMojo {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return classLoader;
+        return customClassLoader = classLoader;
     }
 
 }

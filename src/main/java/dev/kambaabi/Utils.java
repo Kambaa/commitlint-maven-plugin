@@ -7,4 +7,8 @@ public class Utils {
         return null != list && list.size() > 0;
     }
 
+    public static boolean stringNotEmpty(String str) {
+        return null != str && !str.equalsIgnoreCase("");
+    }
+
 }

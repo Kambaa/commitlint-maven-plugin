@@ -12,7 +12,7 @@ a maven plugin to do it. My aim is that this plugin should do pretty much same j
 | [type-enum](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#type-enum)	                           | X	                    | 	                                   |
 | [type-case](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#type-case)	                           | X	                    | 	                                   |
 | [type-empty](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#type-empty)	                         | X 	                   | 	                                   |
-| [subject-case](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#subject-case)	                     | 	                     | 	                                   |
+| [subject-case](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#subject-case)	                     | 	                     | X	                                  |
 | [subject-empty](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#subject-empty)	                   | X 	                   | 	                                   |
 | [subject-full-stop](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#subject-full-stop)	           | 	                     | 	                                   |
 | [header-max-length](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#header-max-length)	           | 	                     | 	                                   |
@@ -44,6 +44,6 @@ seni Allah bildiği gibi yapsın
 - https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#rules
 - https://www.conventionalcommits.org/en/v1.0.0/
 - https://gist.github.com/marcojahn/482410b728c31b221b70ea6d2c433f0c
-
+- https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-conventionalcommits/parserOpts.js
 - https://maven.apache.org/guides/mini/guide-maven-classloading.html
 - https://stackoverflow.com/a/77206769/1020512
