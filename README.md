@@ -148,3 +148,5 @@ seni Allah bildiği gibi yapsın
 - https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/conventional-changelog-conventionalcommits/parserOpts.js
 - https://maven.apache.org/guides/mini/guide-maven-classloading.html
 - https://stackoverflow.com/a/77206769/1020512
+- https://commitlint.io/
+- https://regex101.com/
