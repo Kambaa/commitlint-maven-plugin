@@ -37,7 +37,7 @@ seni Allah bildiği gibi yapsın
 ]
 ```
 
-#### current maven plugin example:
+#### current maven plugin example(that i'm using for dev & testing):
 
 ```xml
 
