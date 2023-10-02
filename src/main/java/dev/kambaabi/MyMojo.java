@@ -114,6 +114,13 @@ public class MyMojo extends AbstractMojo {
         if (!isNonEmptyArray(regexconfig.getSubjectValidations())) {
             debug("No Subject Validations given for this Regex!");
         } else {
+//            Pattern lineSplitterPattern = Pattern.compile("^(.*\\n?)$");
+//            Matcher lineMatcher = lineSplitterPattern.matcher(commitMessage);
+//            if (!lineMatcher.matches()) {
+//                debug("Pattern %s did not match!", lineSplitterPattern.pattern());
+//                throw new MojoFailureException(String.format("Error occured calculating subject! Pattern %s did not match!", lineSplitterPattern.pattern()));
+//            }
+//            String subject = lineMatcher.group(1);
             String subject = commitMessage.split("\n")[0];
             if (!stringNotEmpty(subject)) {
                 debug("Error occured calculating subject! Splitting by \n did not work!");
