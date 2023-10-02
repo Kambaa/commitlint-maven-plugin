@@ -72,7 +72,10 @@ public class MyMojo extends AbstractMojo {
             error("Regex: %s", pattern.pattern());
             throw new MojoFailureException(String.format("Commit Message did not match!\nPattern: %s\nCommit Message: %s", pattern.pattern(), commitMessage));
         }
-        debug("Configsize: %d, captureGroupsize: %d", regexconfig.getCaptureGroups().size(), matcher.groupCount());
+        debug("Config size: %d, capture groupsize: %d", regexconfig.getCaptureGroups().size(), matcher.groupCount());
+        for (int i = 0; i < matcher.groupCount(); i++) {
+            debug("Capture Group %d: %s", i, matcher.group(i));
+        }
 
         if (!isNonEmptyArray(regexconfig.getCaptureGroups())) {
             debug("No CaptureGroup Validations Configured given for this Regex!");
@@ -121,8 +124,9 @@ public class MyMojo extends AbstractMojo {
                     if (!result && validationConfig.getLevel().equals(ValidationConfig.ValidationLevels.WARN)) {
                         warn("[%s] %s(%s) validation result: %s", validationConfig.getLevel(), validator.getClass().getSimpleName(), String.join(",", args), result);
                     } else if (!result && validationConfig.getLevel().equals(ValidationConfig.ValidationLevels.ERROR)) {
-                        error("%s(%s) validation result for Capture Group %d [%s]: %s", validator.getClass().getSimpleName(), String.join(",", args), i, captureGroup, result);
-                        throw new MojoFailureException("failed commit message checks!");
+                        String msg = String.format("%s(%s) validation result for Capture Group %d [%s]: %s", validator.getClass().getSimpleName(), String.join(",", args), i, captureGroup, result);
+                        error(msg);
+                        throw new MojoFailureException("failed commit message checks! " + msg);
                     }
                 }
             }

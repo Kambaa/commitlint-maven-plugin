@@ -26,9 +26,8 @@ public class LengthValidator implements CommitTextValidator {
     @Override
     public boolean validate(String value) throws MojoFailureException {
         if (min == 0 && max == 0) {
-            throw new MojoFailureException("Please assign a value to at least one of the min or max!");
+            throw new MojoFailureException("Please assign min and max values for LengthValidator!");
         }
-        // TODO: check this, does this work?
-        return min > -1 ? fitMin(value, min) : max <= 0 || fitMax(value, max);
+        return fitMin(value, min) && fitMax(value, max);
     }
 }
