@@ -106,32 +106,60 @@ public class MyMojo extends AbstractMojo {
                         debug("Validation Skip Conditions Met for Validation %s, %d. Capture Group [%s], Validation Opts %s", validationConfig.getClassName(), i, captureGroup, validationConfig.getOpts());
                         continue;
                     }
-                    Class<CommitTextValidator> clazz = (Class<CommitTextValidator>) getClassLoader().loadClass(validationConfig.getClassName());
-                    debug("Loaded class: " + clazz.getName());
-                    String[] args = new String[0];
-                    if (isNonEmptyArray(validationConfig.getArgs())) {
-                        debug("Validation config has argument values for %s, getting.", clazz.getName());
-                        args = validationConfig.getArgs().toArray(new String[0]);
-                    }
-                    debug("There are %d args defined for %s: [%s] ", args.length, validationConfig.getClassName(), String.join(",", args));
-
-                    CommitTextValidator validator = clazz.newInstance();
-                    debug("Instance generated for %s", validator.getClass().getSimpleName());
-                    validator.registerArgs(args);
-                    debug("Args registered for the generated instance of %s: [%s]", validator.getClass().getSimpleName(), String.join(",", args));
-                    boolean result = validator.validate(captureGroup);
-                    debug("level: [%s] %s(%s) validation result for Capture Group %d [%s]: %s", validationConfig.getLevel(), validationConfig.getClassName(), String.join(",", args), i, captureGroup, result);
-                    if (!result && validationConfig.getLevel().equals(ValidationConfig.ValidationLevels.WARN)) {
-                        warn("[%s] %s(%s) validation result: %s", validationConfig.getLevel(), validator.getClass().getSimpleName(), String.join(",", args), result);
-                    } else if (!result && validationConfig.getLevel().equals(ValidationConfig.ValidationLevels.ERROR)) {
-                        String msg = String.format("%s(%s) validation result for Capture Group %d [%s]: %s", validator.getClass().getSimpleName(), String.join(",", args), i, captureGroup, result);
-                        error(msg);
-                        throw new MojoFailureException("failed commit message checks! " + msg);
-                    }
+                    loadValidationClassAndValidateForCaptureGroup(i, captureGroup, validationConfig);
                 }
             }
         }
+
+        if (!isNonEmptyArray(regexconfig.getSubjectValidations())) {
+            debug("No Subject Validations given for this Regex!");
+        } else {
+            String subject = commitMessage.split("\n")[0];
+            if (!stringNotEmpty(subject)) {
+                debug("Error occured calculating subject! Splitting by \n did not work!");
+                throw new MojoFailureException(String.format("Error occured calculating subject! Splitting by \n did not work!"));
+            }
+            debug("There are %d validation(s) defined for the Subject [%s], looping each one.",
+                    regexconfig.getSubjectValidations().size(), subject);
+            for (ValidationConfig validationConfig : regexconfig.getSubjectValidations()) {
+                if (
+                        ValidationConfig.ValidationOpts.SKIP_IF_EMPTY.equals(validationConfig.getOpts()) ||
+                                (!stringNotEmpty(subject) && validationConfig.getOpts().equals(ValidationConfig.ValidationOpts.SKIP_IF_EMPTY))
+                ) {
+                    debug("Validation Skip Conditions Met for Validation %s, Subject [%s], Validation Opts %s", validationConfig.getClassName(), subject, validationConfig.getOpts());
+                    continue;
+                }
+                loadValidationClassAndValidateForCaptureGroup(-1, subject, validationConfig);
+            }
+        }
+
     }
+
+    private void loadValidationClassAndValidateForCaptureGroup(int i, String captureGroup, ValidationConfig validationConfig) throws Exception {
+        Class<CommitTextValidator> clazz = (Class<CommitTextValidator>) getClassLoader().loadClass(validationConfig.getClassName());
+        debug("Loaded class: " + clazz.getName());
+        String[] args = new String[0];
+        if (isNonEmptyArray(validationConfig.getArgs())) {
+            debug("Validation config has argument values for %s, getting.", clazz.getName());
+            args = validationConfig.getArgs().toArray(new String[0]);
+        }
+        debug("There are %d args defined for %s: [%s] ", args.length, validationConfig.getClassName(), String.join(",", args));
+
+        CommitTextValidator validator = clazz.newInstance();
+        debug("Instance generated for %s", validator.getClass().getSimpleName());
+        validator.registerArgs(args);
+        debug("Args registered for the generated instance of %s: [%s]", validator.getClass().getSimpleName(), String.join(",", args));
+        boolean result = validator.validate(captureGroup);
+        debug("level: [%s] %s(%s) validation result for Capture Group %d [%s]: %s", validationConfig.getLevel(), validationConfig.getClassName(), String.join(",", args), i, captureGroup, result);
+        if (!result && validationConfig.getLevel().equals(ValidationConfig.ValidationLevels.WARN)) {
+            warn("[%s] %s(%s) validation result: %s", validationConfig.getLevel(), validator.getClass().getSimpleName(), String.join(",", args), result);
+        } else if (!result && validationConfig.getLevel().equals(ValidationConfig.ValidationLevels.ERROR)) {
+            String msg = String.format("%s(%s) validation result for Capture Group %d [%s]: %s", validator.getClass().getSimpleName(), String.join(",", args), i, captureGroup, result);
+            error(msg);
+            throw new MojoFailureException("failed commit message checks! " + msg);
+        }
+    }
+
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {

@@ -19,7 +19,10 @@ public class RegexConfig {
      * Custom defined capture group validation configuration list.
      */
     @Parameter(property = "captureGroup")
-    private List<CaptureGroupConfig> captureGroupConfigs;
+    private List<CaptureGroupConfig> captureGroups;
+
+    @Parameter(property = "validation")
+    private List<ValidationConfig> subjectValidations;
 
     public String getValue() {
         return value;
@@ -30,10 +33,18 @@ public class RegexConfig {
     }
 
     public List<CaptureGroupConfig> getCaptureGroups() {
-        return captureGroupConfigs;
+        return captureGroups;
     }
 
     public void setCaptureGroups(List<CaptureGroupConfig> captureGroupConfigs) {
-        this.captureGroupConfigs = captureGroupConfigs;
+        this.captureGroups = captureGroupConfigs;
+    }
+
+    public List<ValidationConfig> getSubjectValidations() {
+        return subjectValidations;
+    }
+
+    public void setSubjectValidations(List<ValidationConfig> subjectValidations) {
+        this.subjectValidations = subjectValidations;
     }
 }
