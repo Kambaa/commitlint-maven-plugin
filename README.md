@@ -37,7 +37,7 @@ seni Allah bildiği gibi yapsın
 ]
 ```
 
-#### current maven plugin example:
+#### current maven plugin example(that i'm using for dev & testing):
 
 ```xml
 
@@ -149,4 +149,4 @@ seni Allah bildiği gibi yapsın
 - https://maven.apache.org/guides/mini/guide-maven-classloading.html
 - https://stackoverflow.com/a/77206769/1020512
 - https://commitlint.io/
-- https://regex101.com/
+- https://regex101.com/r/jRfCCj/1
