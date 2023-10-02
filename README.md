@@ -46,7 +46,8 @@ seni Allah bildiği gibi yapsın
     <artifactId>commitlint-maven-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <configuration>
-        <testCommitMessage>feat: ornek deneme
+        <testCommitMessage>feat(scope)!: some message that is way too long and breaks the line max-length
+            awdawdawdawdawdawd aw da aw aw dawd awd aw
 
             seni Allah bildiği gibi yapsın
 
@@ -125,6 +126,13 @@ seni Allah bildiği gibi yapsın
                                     <className>dev.kambaabi.validator.NonEmptyValidator</className>
                                     <level>ERROR</level>
                                 </validation>
+                                <validation>
+                                    <className>dev.kambaabi.validator.NotEndingWithValidator</className>
+                                    <level>ERROR</level>
+                                    <args>
+                                        <arg>.</arg>
+                                    </args>
+                                </validation>
                             </validations>
                         </captureGroup>
                         <captureGroup>
@@ -132,8 +140,21 @@ seni Allah bildiği gibi yapsın
                             <validations></validations>
                         </captureGroup>
                     </captureGroups>
+
+                    <subjectValidations>
+                        <validation>
+                            <className>dev.kambaabi.validator.LengthValidator</className>
+                            <level>ERROR</level>
+                            <args>
+                                <arg>1</arg>
+                                <arg>100</arg>
+                            </args>
+                        </validation>
+                    </subjectValidations>
                 </regex>
+
             </regexes>
+
         </customConfig>
     </configuration>
 </plugin>
