@@ -17,16 +17,22 @@ import java.util.regex.Pattern;
 @Mojo(name = "check")
 public class CheckCommitMsg extends AbstractMojo {
 
+    /**
+     * Skips execution if true.
+     */
     @Parameter(defaultValue = "false")
     private boolean skip;
+    /**
+     * If sets to false, validations errors will be be a build failure, instead messages will be logged as an error.
+     */
     @Parameter(defaultValue = "true")
     private boolean failOnError;
 
+    /**
+     * Test your commit messages with this parameter value.
+     */
     @Parameter
     private String testCommitMessage = "";
-
-    private Pattern generalSubjectPattern = Pattern.compile("^(\\w*)(?:\\(([\\w\\-.]+)\\))?(!)?: ([\\w ]+)(\\n[\\s\\S]*)?");
-
 
     @Override
     public void execute() throws MojoFailureException {
