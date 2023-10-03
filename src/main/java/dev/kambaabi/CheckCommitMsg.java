@@ -23,11 +23,7 @@ public class CheckCommitMsg extends AbstractMojo {
     private boolean failOnError;
 
     @Parameter
-    private String testCommitMessage = "feat(SCOPE)!: some message that is way too long and breaks the line max-length\n" +
-            "\nawdawdawdawdawdawd aw da aw aw dawd awd aw\n" +
-            "seni Allah bildiği gibi yapsın\n\n" +
-            "\n" +
-            "awdawd\n";
+    private String testCommitMessage = "";
 
     private Pattern generalSubjectPattern = Pattern.compile("^(\\w*)(?:\\(([\\w\\-.]+)\\))?(!)?: ([\\w ]+)(\\n[\\s\\S]*)?");
 
