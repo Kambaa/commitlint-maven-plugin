@@ -8,6 +8,7 @@ import java.io.File;
 
 /**
  * https://cwiki.apache.org/confluence/display/MAVENOLD/Maven+Plugin+Harness
+ * https://maven.apache.org/plugin-developers/plugin-testing.html
  */
 public class FirstTest extends AbstractMojoTestCase {
 
