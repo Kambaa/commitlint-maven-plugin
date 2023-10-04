@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import java.io.File;
 
+/**
+ * https://cwiki.apache.org/confluence/display/MAVENOLD/Maven+Plugin+Harness
+ */
 public class FirstTest extends AbstractMojoTestCase {
 
 
