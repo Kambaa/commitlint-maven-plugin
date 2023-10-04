@@ -110,27 +110,30 @@ public class CheckCommitMsg extends AbstractMojo {
             exit("Commit message is not valid!\n\tSubject line size must not be larger than " +
                     "100!(Yours is: " + subjectLine.length() + ")\n\tYour commit message first line: `" + subjectLine + "`");
         }
-        String newLineBeforeBody = splitStr[1];
-        debug("calculate newLineBeforeBody %s", newLineBeforeBody);
+        if (splitStr.length > 1) {
+            String newLineBeforeBody = splitStr[1];
+            debug("calculate newLineBeforeBody %s", newLineBeforeBody);
 
-        debug("checking newLineBeforeBody is just a new line: %s", newLineBeforeBody);
-        if (null != newLineBeforeBody && !newLineBeforeBody.equals("")) {
-            exit("You have entered text which should just be a new line!\n\tConventional " +
-                    "Commits' rules say that after the first line, you MUST enter a blank line before\n\tstarting " +
-                    "for your commit message body/footer! For Example:\n\tfeat: add hat wobble\n\t\t\t\t\t\t\t\t\t\t" +
-                    "<--empty line here\n\tSome details about " +
-                    "your commit:\n\tBreaking changes,\n\tissue mentions,\n\tacknowledgements\n\tetc...");
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 2; i < splitStr.length; i++) {
-            sb.append(splitStr[i]);
-            if (i != splitStr.length - 1) {
-                sb.append("\n");
+            debug("checking newLineBeforeBody is just a new line: %s", newLineBeforeBody);
+            if (null != newLineBeforeBody && !newLineBeforeBody.equals("")) {
+                exit("You have entered text which should just be a new line!\n\tConventional " +
+                        "Commits' rules say that after the first line, you MUST enter a blank line before\n\tstarting " +
+                        "for your commit message body/footer! For Example:\n\tfeat: add hat wobble\n\t\t\t\t\t\t\t\t\t\t" +
+                        "<--empty line here\n\tSome details about " +
+                        "your commit:\n\tBreaking changes,\n\tissue mentions,\n\tacknowledgements\n\tetc...");
             }
         }
-        String body = sb.toString();
-        debug("combine everything to variable `body`: %s", body);
+        if (splitStr.length > 2) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 2; i < splitStr.length; i++) {
+                sb.append(splitStr[i]);
+                if (i != splitStr.length - 1) {
+                    sb.append("\n");
+                }
+            }
+            String body = sb.toString();
+            debug("combine everything to variable `body`: %s", body);
+        }
     }
 
     public boolean getSkip() {

@@ -1,0 +1,17 @@
+<!-- src/test/resources/test-project/pom.xml -->
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>dev.kambaabi</groupId>
+                <artifactId>commitlint-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <configuration>
+                    <skip>false</skip>
+                    <failOnError>true</failOnError>
+                    <testCommitMessage>feat: add hat wobble</testCommitMessage>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
