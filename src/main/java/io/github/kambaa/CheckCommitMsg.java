@@ -12,6 +12,10 @@ import org.apache.maven.plugins.annotations.Parameter;
  */
 @Mojo(name = "check")
 public class CheckCommitMsg extends MyBaseMojo {
+  /**
+   * Default splitting text(without quotes).
+   * "------------------------ >8 ------------------------"
+   */
   public static final String DEFAULT_SPLITTER = "------------------------ >8 ------------------------";
 
   /**
@@ -22,6 +26,8 @@ public class CheckCommitMsg extends MyBaseMojo {
 
   /**
    * To enter custom splitting text.
+   * default splitter is(without quotes):
+   * "------------------------ >8 ------------------------"
    */
   @Parameter(defaultValue = DEFAULT_SPLITTER)
   private String multipleGitLogMessageSplitter;
