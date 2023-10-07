@@ -3,6 +3,10 @@ package io.github.kambaa;
 import static io.github.kambaa.utils.Utils.isEmpty;
 
 import io.github.kambaa.utils.MyBaseMojo;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -52,7 +56,17 @@ public class CheckCommitMsg extends MyBaseMojo {
       return;
     }
 
-    String[] commitMsgArr = multipleGitLogMessages.split(multipleGitLogMessageSplitter);
+    Path path = Paths.get(multipleGitLogMessages);
+    String text = multipleGitLogMessages;
+    if (Files.exists(path)) {
+      try {
+        text = new String(Files.readAllBytes(path));
+      } catch (IOException ex) {
+        exit("Error occured when trying to read from the file:%s\n\tException is: %s", multipleGitLogMessages, ex.getMessage());
+        return;
+      }
+    }
+    String[] commitMsgArr = text.split(multipleGitLogMessageSplitter);
     if (isEmpty(commitMsgArr)) {
       exit("Multiple Git Log Messages Can Not Be Parsed!\nSplitter%s\nGiven Multiple Log Messages:%s", multipleGitLogMessageSplitter, multipleGitLogMessages);
       return;
