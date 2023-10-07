@@ -1,6 +1,6 @@
 # Git Message Check Maven Plugin
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/BxmTeuHVtoJHLPPkgqHfJ8/JZztMDa5SbuWzVbP357W8D/tree/circleci-project-setup.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/BxmTeuHVtoJHLPPkgqHfJ8/JZztMDa5SbuWzVbP357W8D/tree/circleci-project-setup)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Kambaa/gmc-maven-plugin/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Kambaa/gmc-maven-plugin/tree/master)
 
 A maven plugin that checks given commit messages
 
