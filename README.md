@@ -63,6 +63,16 @@ or add `<pluginGroup>gmc-maven-plugin</pluginGroup>` to your plugin groups in yo
 mvn gmc:check -DmultipleGitLogMessages=<COMBINED_LOG_MESSAGES_HERE>
 ```
 
+
+## My thoughts on current solution:
+Apperantly the js solution:  
+- calls the git command with arguments itself through a seperate process([code](https://github.com/conventional-changelog/conventional-changelog/blob/master/packages/git-raw-commits/index.js#L59)),
+- gets the resulting text from it,
+- splits and processes(not sure) the commits,
+- and does the validations which is abstracted heavily but it's configurative, it can be read through the [docs]( https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#rules). It covers the variety of checks (which in my opinion and for my needs, it's too many and it's not that needed really 😊 ).
+
+I don't need that much complication, i can write my own bash script to get the git log combined, and give it to this plugin to check'em. Simplicity is enough and great for me. A simple check for extending should be enough for other peoples needs. IDK right now, I will think of a solution later if Allah is willing. 
+
 ### Some links that i inspired from:
 
 - https://github.com/Rugal/commitlinter-maven-plugin
