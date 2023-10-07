@@ -35,19 +35,15 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
 
-      - name: XXX
-        run:
-          echo "<settingsSecurity><master>{cm+Mcnw17bwHLPK1b+2zT6ZjTHFw9Bmho560O5nvcqg=}</master></settingsSecurity>" > /home/runner/.m2/settings-security.xml
+      - name: Clean & Build
+        run: mvn clean compile
 
+      - name: Test
+        run: mvn test
 
-      - name: verify
-        run: mvn verify
+      - name: deploy
+        run: mvn deploy
 
-      #- name: Clean & Build
-      #  run: mvn clean compile
-      #
-      #- name: Test
-      #  run: mvn test
 
 
 
