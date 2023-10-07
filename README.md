@@ -1,5 +1,7 @@
 # Git Message Check Maven Plugin
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/BxmTeuHVtoJHLPPkgqHfJ8/JZztMDa5SbuWzVbP357W8D/tree/circleci-project-setup.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/BxmTeuHVtoJHLPPkgqHfJ8/JZztMDa5SbuWzVbP357W8D/tree/circleci-project-setup)
+
 A maven plugin that checks given commit messages
 
 In our company, for our maven projects, we use js solutions for commit message convention checking, so i wanted to write
