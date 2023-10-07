@@ -1,5 +1,5 @@
 # Git Message Check Maven Plugin
-
+![Static Badge](https://img.shields.io/badge/My_First-Open_Source_Project-blue)
 ![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.github.kambaa/gmc-maven-plugin?server=https%3A%2F%2Fs01.oss.sonatype.org)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/Kambaa/gmc-maven-plugin/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Kambaa/gmc-maven-plugin/tree/master)
 
