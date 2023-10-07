@@ -73,6 +73,14 @@ Apperantly the js solution:
 
 I don't need that much complication, i can write my own bash script to get the git log combined, and give it to this plugin to check'em. Simplicity is enough and great for me. A simple check for extending should be enough for other peoples needs. IDK right now, I will think of a solution later if Allah is willing. 
 
+```shell
+# get commits from latest tag to current with default split text
+git log --format="%B%n------------------------ >8 ------------------------" 
+$(git describe --tags --abbrev=0)..HEAD
+```
+
+
+
 ### Some links that i inspired from:
 
 - https://github.com/Rugal/commitlinter-maven-plugin
@@ -84,3 +92,4 @@ I don't need that much complication, i can write my own bash script to get the g
 - https://stackoverflow.com/a/77206769/1020512
 - https://commitlint.io/
 - https://regex101.com/r/jRfCCj/1
+- https://git-scm.com/docs/git-log
