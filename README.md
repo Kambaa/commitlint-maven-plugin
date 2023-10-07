@@ -1,4 +1,4 @@
-# commitlint-maven-plugin
+# gmc-maven-plugin
 
 A maven plugin that checks given commit messages
 
@@ -13,10 +13,29 @@ a maven plugin to do it. My aim is that this plugin should do pretty much same j
 ```xml
 
 <plugin>
-    <groupId>dev.kambaabi</groupId>
-    <artifactId>commitlint-maven-plugin</artifactId>
+    <groupId>io.github.kambaa</groupId>
+    <artifactId>gmc-maven-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <configuration>
+
+        <!--
+            <multipleGitLogMessages>
+             
+                Enter your historical git log messages here 
+                with splitting value, default is:
+                ------------------------ >8 ------------------------
+                or customize you can customize it.
+                
+            </multipleGitLogMessages>
+
+            <multipleGitLogMessageSplitter>
+                (OPTIONAL) Enter your custom splitting text for the plugin to understand. 
+                Again default value is:
+                ------------------------ >8 ------------------------
+            </multipleGitLogMessageSplitter>
+        -->
+
+        <!-- Test or validate a single message -->
         <testCommitMessage>
             feat: some message that is way too long and breaks the line max-length
 
@@ -28,11 +47,19 @@ a maven plugin to do it. My aim is that this plugin should do pretty much same j
 
             www
         </testCommitMessage>
+
+        <!-- (OPTIONAL): fail maven build on error. Default: true -->
         <failOnError>true</failOnError>
+        <!-- (OPTIONAL): skips this plugin's execution. Default: false -->
         <skip>false</skip>
     </configuration>
 </plugin>
 
+```
+
+You can get the log messages with `git` command, get the list of commit messages to check, and give it to this plugin like this: 
+```shell
+mvn io.github.kambaa:gmc-maven-plugin:check -DmultipleGitLogMessages=<COMBINED_LOG_MESSAGES_HERE>
 ```
 
 ### Some links that i inspired from:

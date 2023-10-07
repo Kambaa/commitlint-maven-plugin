@@ -4,10 +4,10 @@
 
     <groupId>io.github.kambaa</groupId>
     <artifactId>gmc-maven-plugin</artifactId>
-    <name>gitmsgcheck-maven-plugin</name>
     <version>1.0-SNAPSHOT</version>
-
     <packaging>maven-plugin</packaging>
+
+    <name>Git Commit Message Checking Maven Plugin</name>
     <url>https://github.com/Kambaa/gitmsgcheck-maven-plugin</url>
 
     <properties>

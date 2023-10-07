@@ -21,7 +21,7 @@ public class CheckCommitMsg extends MyBaseMojo {
   /**
    * To enter check multiple git log messages.
    */
-  @Parameter(required = true)
+  @Parameter
   private String multipleGitLogMessages;
 
   /**
@@ -47,7 +47,7 @@ public class CheckCommitMsg extends MyBaseMojo {
     if (isEmpty(testCommitMessage)) {
       debug("No commit message provided, skipping.");
     } else {
-      debug("Single commit message provided just testing that.");
+      info("Single commit message provided just testing that.");
       super.checkCommitMsg(testCommitMessage);
       return;
     }
