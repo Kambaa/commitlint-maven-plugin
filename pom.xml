@@ -112,6 +112,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <!-- on my settings xml, i defined my passphrase in a server block in settings.xml -->
+                    <passphraseServerId>gpg.passphrase</passphraseServerId>
+                </configuration>
             </plugin>
         </plugins>
     </build>
