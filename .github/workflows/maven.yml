@@ -7,17 +7,12 @@
 # documentation.
 
 name: Java CI with Maven
-
-#on:
-#  push:
-#    branches: [ "master" ]
+on:
+  push:
+    branches: [ "master" ]
 #  pull_request:
 #    branches: [ "master" ]
 
-on:
-  workflow_run:
-    workflows: ["Java CI with Maven"]
-    types: [requested]
 
 jobs:
   build:
