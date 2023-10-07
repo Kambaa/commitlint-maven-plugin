@@ -37,7 +37,8 @@ jobs:
 
       - name: XXX
         run:
-          mvn --encrypt-master-password ${{ secrets.GPG_PASSPHRASE }}
+          echo "<settingsSecurity><master>{cm+Mcnw17bwHLPK1b+2zT6ZjTHFw9Bmho560O5nvcqg=}</master></settingsSecurity>" > /home/runner/.m2/settings-security.xml
+
 
       - name: verify
         run: mvn verify
