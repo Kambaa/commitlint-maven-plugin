@@ -1,4 +1,4 @@
-package dev.kambaabi;
+package io.github.kambaa;
 
 import java.util.Arrays;
 import java.util.HashSet;

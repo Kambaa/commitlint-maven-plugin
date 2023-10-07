@@ -1,4 +1,4 @@
-package dev.kambaabi;
+package io.github.kambaa;
 
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.junit.Before;
