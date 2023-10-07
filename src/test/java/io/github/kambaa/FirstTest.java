@@ -1,10 +1,9 @@
 package io.github.kambaa;
 
+import java.io.File;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
 
 /**
  * https://cwiki.apache.org/confluence/display/MAVENOLD/Maven+Plugin+Harness
@@ -12,26 +11,25 @@ import java.io.File;
  */
 public class FirstTest extends AbstractMojoTestCase {
 
+  @Before
+  protected void setUp() throws Exception {
+    super.setUp();
+  }
 
-    @Before
-    protected void setUp() throws Exception {
-        super.setUp();
-    }
-
-    @Test
-    public void testMojoConfiguration()
-            throws Exception {
-        File testPom = new File(getBasedir(),
-                "src/test/resources/test-project/pom.xml");
-        assertNotNull(testPom);
-        assertTrue(testPom.exists());
-        CheckCommitMsg mojo = (CheckCommitMsg) lookupMojo("check", testPom);
-        assertNotNull(mojo);
-        assertEquals(false, mojo.getSkip());
-        System.out.println("skip OK");
-        assertEquals(true, mojo.isFailOnError());
-        System.out.println("failOnErr OK");
-        mojo.execute();
-    }
+  @Test
+  public void testMojoConfiguration()
+      throws Exception {
+    File testPom = new File(getBasedir(),
+        "src/test/resources/test-project/pom.xml");
+    assertNotNull(testPom);
+    assertTrue(testPom.exists());
+    CheckCommitMsg mojo = (CheckCommitMsg) lookupMojo("check", testPom);
+    assertNotNull(mojo);
+    assertEquals(false, mojo.isSkip());
+    System.out.println("skip OK");
+    assertEquals(true, mojo.isFailOnError());
+    System.out.println("failOnErr OK");
+    mojo.execute();
+  }
 
 }
