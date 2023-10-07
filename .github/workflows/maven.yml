@@ -21,26 +21,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     
-    - name: Set up JDK 8
-      uses: actions/setup-java@v3
-      with:
-        java-version: '8'
-        distribution: 'temurin'
-        cache: maven
-
-    - name: Import GPG key
-      uses: crazy-max/ghaction-import-gpg@v6
-      with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-    - name: List keys
-      run: gpg -K
-
-    - name: Set up Apache Maven Central
+    - name: Set up Java & Maven
       uses: actions/setup-java@v3
       with: # running setup-java again overwrites the settings.xml
-        distribution: 'temurin'
+        distribution: 'adopt'
         java-version: '8'
         cache: maven
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
@@ -54,16 +40,12 @@ jobs:
       
     - name: Maven Test
       run: mvn test
+
+    - name: Maven verify
+      run: mvn verify
       
     - name: Publish Snapshots to Sonatype
-      run: mvn verify deploy
-      env:
-        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-        MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
-        MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-   
-   
-    
+      run: mvn deploy
       
 # https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-Apache-Maven 
 #    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
