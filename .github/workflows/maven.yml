@@ -34,18 +34,20 @@ jobs:
         server-password: ${{ secrets.MAVEN_SERVER_PASSWORD }} # env variable for token in deploy
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
         gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
-
-    - name: Maven Clean & Build
+        
+    - name: Add settings-security.xml
+      run: echo "<settingsSecurity><master>${MAVEN_MASTER}</master></settingsSecurity>" > /root/.m2/settings-security.xml
+      
+    - name: Clean & Build
       run: mvn clean compile
       
-    - name: Maven Test
+    - name: Test
       run: mvn test
-
-    - name: Maven verify
+    
+    - name: verify
       run: mvn verify
       
-    - name: Publish Snapshots to Sonatype
-      run: mvn deploy
+  
       
 # https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-Apache-Maven 
 #    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
