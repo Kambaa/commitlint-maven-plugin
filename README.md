@@ -164,3 +164,5 @@ Only issue for me to see that there's a newline added between them in `command-o
 - https://commitlint.io/
 - https://regex101.com/r/jRfCCj/1
 - https://git-scm.com/docs/git-log
+- https://central.sonatype.org/publish/publish-maven/#distributing-your-public-key
+- https://jenkov.com/tutorials/maven/publish-to-central-maven-repository.html
