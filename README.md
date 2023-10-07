@@ -1,12 +1,8 @@
-# gmc-maven-plugin
+# Git Message Check Maven Plugin
 
 A maven plugin that checks given commit messages
 
-In our company, for our maven projects, we use js solutions for commit message convention checking, so i wanted to write
-a maven plugin to do it. My aim is that this plugin should do pretty much same job as the configuration right now.
-
-#### Check List
-
+In our company, for our maven projects, we use js solutions for commit message convention checking, so i wanted to write a maven plugin to do it. My aim is that this plugin should do pretty much same job as the current status, without the extra unnecessary checks or configurations.
 
 #### current maven plugin example(that i'm using for dev & testing):
 
@@ -60,6 +56,11 @@ a maven plugin to do it. My aim is that this plugin should do pretty much same j
 You can get the log messages with `git` command, get the list of commit messages to check, and give it to this plugin like this: 
 ```shell
 mvn io.github.kambaa:gmc-maven-plugin:check -DmultipleGitLogMessages=<COMBINED_LOG_MESSAGES_HERE>
+```
+or add `<pluginGroup>gmc-maven-plugin</pluginGroup>` to your plugin groups in your `settings.xml`, and call like this: 
+
+```shell
+mvn gmc:check -DmultipleGitLogMessages=<COMBINED_LOG_MESSAGES_HERE>
 ```
 
 ### Some links that i inspired from:
