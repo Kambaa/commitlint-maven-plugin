@@ -33,10 +33,35 @@ jobs:
       uses: crazy-max/ghaction-import-gpg@v6
       with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.MAVEN_SERVER_PASSPHRASE_FOR_GPG }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
     - name: List keys
       run: gpg -K
+
+    - name: Set up Apache Maven Central
+      uses: actions/setup-java@v3
+      with: # running setup-java again overwrites the settings.xml
+        distribution: 'temurin'
+        java-version: '8'
+        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+        server-username: ${{ secrets.MAVEN_USERNAME }} # env variable for username in deploy
+        server-password: ${{ secrets.MAVEN_SERVER_PASSWORD }} # env variable for token in deploy
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+        gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
+
+    - name: Maven Clean & Build
+      run: mvn clean compile
       
+    - name: Maven Test
+      run: mvn test
+      
+    - name: Publish Snapshots to Sonatype
+      run: mvn verify deploy
+      env:
+        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+        MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
+        MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+   
+   
     
       
 # https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-Apache-Maven 
