@@ -16,7 +16,7 @@ name: Java CI with Maven
 
 on:
   workflow_run:
-    workflows: ["Build"]
+    workflows: ["Java CI with Maven"]
     types: [requested]
 
 jobs:
