@@ -42,6 +42,7 @@ jobs:
       with: # running setup-java again overwrites the settings.xml
         distribution: 'temurin'
         java-version: '8'
+        cache: maven
         server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
         server-username: ${{ secrets.MAVEN_USERNAME }} # env variable for username in deploy
         server-password: ${{ secrets.MAVEN_SERVER_PASSWORD }} # env variable for token in deploy
