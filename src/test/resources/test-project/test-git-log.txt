@@ -1,0 +1,168 @@
+docs: add static badge
+
+------------------------ >8 ------------------------
+docs: add static badge
+
+------------------------ >8 ------------------------
+docs: add example badge after first snapshot deploy
+
+------------------------ >8 ------------------------
+docs: add example badge after first snapshot deploy
+
+------------------------ >8 ------------------------
+refactor: preparation for snapshot maven deploy
+
+------------------------ >8 ------------------------
+Merge branch 'master' of https://github.com/Kambaa/gmc-maven-plugin
+
+------------------------ >8 ------------------------
+feat: add badge
+
+------------------------ >8 ------------------------
+Merge pull request #1 from Kambaa/circleci-project-setup
+
+CircleCI Commit
+------------------------ >8 ------------------------
+feat: add badge
+
+------------------------ >8 ------------------------
+feat: testing for the first poc
+
+added poc notes on the readme file
+
+------------------------ >8 ------------------------
+CircleCI Commit
+------------------------ >8 ------------------------
+feat: testing for the first poc
+
+added poc notes on the readme file
+
+------------------------ >8 ------------------------
+doc: update readme
+
+------------------------ >8 ------------------------
+doc: update readme
+
+------------------------ >8 ------------------------
+doc: update readme
+
+------------------------ >8 ------------------------
+refactor: change project name and some docs
+
+------------------------ >8 ------------------------
+refactor: change project name gmc-maven-plugin
+
+------------------------ >8 ------------------------
+docs: add docs
+
+------------------------ >8 ------------------------
+feat: move common ops add multiple message checking
+
+------------------------ >8 ------------------------
+fix: update github actions
+
+------------------------ >8 ------------------------
+fix: update github actions
+
+------------------------ >8 ------------------------
+fix: update github actions
+
+------------------------ >8 ------------------------
+fix: package rename to new maven domain
+
+------------------------ >8 ------------------------
+feat: change package name with new maven domain
+
+------------------------ >8 ------------------------
+style: add harness wiki link
+
+------------------------ >8 ------------------------
+style: add harness wiki link
+
+------------------------ >8 ------------------------
+Merge branch 'master' of https://github.com/Kambaa/commitlint-maven-plugin
+
+------------------------ >8 ------------------------
+feat: add test config working structure
+
+------------------------ >8 ------------------------
+Create maven.yml
+------------------------ >8 ------------------------
+feat: simple, working condition
+
+------------------------ >8 ------------------------
+feat: simple, working condition
+
+------------------------ >8 ------------------------
+feat: simple, working condition
+
+------------------------ >8 ------------------------
+feat: simple, working condition
+
+------------------------ >8 ------------------------
+doc: readme update
+
+------------------------ >8 ------------------------
+refactor: testing regex instead of split
+
+------------------------ >8 ------------------------
+Merge branch 'master' of https://github.com/Kambaa/commitlint-maven-plugin
+
+------------------------ >8 ------------------------
+feat: add commit subject line extration and validation
+
+------------------------ >8 ------------------------
+feat: add NotEndingWithValidator.java
+
+------------------------ >8 ------------------------
+docs: update readme
+------------------------ >8 ------------------------
+docs: update readme
+------------------------ >8 ------------------------
+doc: update readme
+
+------------------------ >8 ------------------------
+doc: add testing config
+
+------------------------ >8 ------------------------
+refactor: update config structure, add validators, enhance mojo
+
+------------------------ >8 ------------------------
+doc: add mojo class loading link on readme
+
+------------------------ >8 ------------------------
+refactor: add check from config structure
+
+------------------------ >8 ------------------------
+refactor: basic external validation read from config
+
+------------------------ >8 ------------------------
+refactor: fix dynamically load classes
+
+------------------------ >8 ------------------------
+refactor: exit classloader hell load the custom validation class
+
+------------------------ >8 ------------------------
+feat: add first working complex config file structure
+
+------------------------ >8 ------------------------
+docs: update readme
+
+------------------------ >8 ------------------------
+docs: update readme
+------------------------ >8 ------------------------
+docs: add readme
+
+------------------------ >8 ------------------------
+refactor: enhance regex and clear capture grouping
+
+------------------------ >8 ------------------------
+refactor: add general regex validation
+
+------------------------ >8 ------------------------
+feat: initial
+
+------------------------ >8 ------------------------
+feat: initial commit
+
+------------------------ >8 ------------------------

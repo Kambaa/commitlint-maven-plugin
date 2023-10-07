@@ -12,7 +12,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 /**
  * Base mojo abstract class.
  */
-public abstract class MyBaseMojo extends AbstractMojo {
+public class MyBaseMojo extends AbstractMojo {
   /**
    * Constructor.
    */
@@ -61,7 +61,7 @@ public abstract class MyBaseMojo extends AbstractMojo {
       debug("Subject Line is: %s", subjectLine);
       debug("Commit Message is: %s", testCommitMessage);
       exit("Commit message can not be parsed!\n\tStart by entering a commit message " +
-           "like this:\n\tfeat: add hat wobble\n\tYour commit message first line: `" + subjectLine + "`");
+           "like this:\n\tfeat: add hat wobble\n\tYour commit message first line: `" + subjectLine + "`\n\tCommit message is: `" + testCommitMessage + "`");
     }
 
     String type = subjectMatcher.group(1);

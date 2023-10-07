@@ -16,7 +16,7 @@ extra unnecessary checks or configurations.
 <plugin>
     <groupId>io.github.kambaa</groupId>
     <artifactId>gmc-maven-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <configuration>
 
         <!--
@@ -127,7 +127,7 @@ $(git describe --tags --abbrev=0)..HEAD
     <plugin>
         <groupId>io.github.kambaa</groupId>
         <artifactId>gmc-maven-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
         <executions>
             <execution>
                 <phase>initialize</phase>

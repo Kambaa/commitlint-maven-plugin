@@ -24,9 +24,9 @@ public class CheckCommitMsg extends MyBaseMojo {
 
   /**
    * Default splitting text(without quotes).
-   * "------------------------ &gt;8 ------------------------"
+   * "\n------------------------ &gt;8 ------------------------\n"
    */
-  public static final String DEFAULT_SPLITTER = "------------------------ &gt;8 ------------------------";
+  public static final String DEFAULT_SEPARATOR = "\n------------------------ >8 ------------------------\n";
 
   /**
    * To enter check multiple git log messages.
@@ -37,10 +37,10 @@ public class CheckCommitMsg extends MyBaseMojo {
   /**
    * To enter custom splitting text.
    * default splitter is(without quotes):
-   * "------------------------ &gt;8 ------------------------"
+   * "\n------------------------ &gt;8 ------------------------\n"
    */
-  @Parameter(defaultValue = DEFAULT_SPLITTER)
-  private String multipleGitLogMessageSplitter;
+  @Parameter(defaultValue = DEFAULT_SEPARATOR)
+  private String multipleGitLogMessageSeparator = DEFAULT_SEPARATOR;
 
   /**
    * Test your commit messages with this parameter value.
@@ -64,7 +64,8 @@ public class CheckCommitMsg extends MyBaseMojo {
 
     Path path = Paths.get(multipleGitLogMessages);
     String text = multipleGitLogMessages;
-    if (Files.exists(path)) {
+    boolean isGivenTextAFileLocation = Files.exists(path);
+    if (isGivenTextAFileLocation) {
       try {
         text = new String(Files.readAllBytes(path));
       } catch (IOException ex) {
@@ -72,14 +73,19 @@ public class CheckCommitMsg extends MyBaseMojo {
         return;
       }
     }
-    String[] commitMsgArr = text.split(multipleGitLogMessageSplitter);
+    String[] commitMsgArr = text.split(multipleGitLogMessageSeparator);
     if (isEmpty(commitMsgArr)) {
-      exit("Multiple Git Log Messages Can Not Be Parsed!\nSplitter%s\nGiven Multiple Log Messages:%s", multipleGitLogMessageSplitter, multipleGitLogMessages);
+      exit("Multiple Git Log Messages Can Not Be Parsed!\nSplitter%s\nGiven Multiple Log Messages:%s", multipleGitLogMessageSeparator, multipleGitLogMessages);
       return;
     }
     info("Starting to check given git log messages!");
     for (String msg : commitMsgArr) {
-      super.checkCommitMsg(msg);
+      if (isGivenTextAFileLocation) {
+        debug("Trimming new lines from %s: ", msg);
+        super.checkCommitMsg(msg.replaceAll("(?m)^\\s*", "").replaceAll("(?m)\\s*$", ""));
+      } else {
+        super.checkCommitMsg(msg);
+      }
     }
     info("Checks done!");
   }
@@ -125,16 +131,16 @@ public class CheckCommitMsg extends MyBaseMojo {
    *
    * @return String
    */
-  public String getMultipleGitLogMessageSplitter() {
-    return multipleGitLogMessageSplitter;
+  public String getMultipleGitLogMessageSeparator() {
+    return multipleGitLogMessageSeparator;
   }
 
   /**
    * multipleGitLogMessageSplitter setter.
    *
-   * @param multipleGitLogMessageSplitter multipleGitLogMessageSplitter
+   * @param multipleGitLogMessageSeparator multipleGitLogMessageSplitter
    */
-  public void setMultipleGitLogMessageSplitter(String multipleGitLogMessageSplitter) {
-    this.multipleGitLogMessageSplitter = multipleGitLogMessageSplitter;
+  public void setMultipleGitLogMessageSeparator(String multipleGitLogMessageSeparator) {
+    this.multipleGitLogMessageSeparator = multipleGitLogMessageSeparator;
   }
 }
