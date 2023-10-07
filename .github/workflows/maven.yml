@@ -7,12 +7,14 @@
 # documentation.
 
 name: Java CI with Maven
-
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  
+  /*
+# on:
+#  push:
+#    branches: [ "master" ]
+#  pull_request:
+#    branches: [ "master" ]
+#
 
 jobs:
   build:
@@ -20,35 +22,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    
-    - name: Set up Java & Maven
-      uses: actions/setup-java@v3
-      with: # running setup-java again overwrites the settings.xml
-        distribution: 'adopt'
-        java-version: '8'
-        cache: maven
-        server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
-        server-username: ${{ secrets.MAVEN_USERNAME }} # env variable for username in deploy
-        server-password: ${{ secrets.MAVEN_SERVER_PASSWORD }} # env variable for token in deploy
-        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
-        gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
 
-    - name: Add settings-security.xml
-      run: echo "<settingsSecurity><master>${MAVEN_MASTER}</master></settingsSecurity>" > /home/runner/.m2/settings-security.xml
+      - name: Set up Java & Maven
+        uses: actions/setup-java@v3
+        with: # running setup-java again overwrites the settings.xml
+          distribution: 'adopt'
+          java-version: '8'
+          cache: maven
+          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
+          server-username: ${{ secrets.MAVEN_USERNAME }} # env variable for username in deploy
+          server-password: ${{ secrets.MAVEN_SERVER_PASSWORD }} # env variable for token in deploy
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }} # env variable for GPG private key passphrase
 
-    - name: Clean & Build
-      run: mvn clean compile
-      
-    - name: Test
-      run: mvn test
-    
-    - name: verify
-      run: mvn verify
-      
-  
-      
+      - name: Clean & Build
+        run: mvn clean compile
+
+      - name: Test
+        run: mvn test
+
+      - name: verify
+        run: mvn verify
+
+
+
 # https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-Apache-Maven 
 #    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
 #    - name: Update dependency graph
