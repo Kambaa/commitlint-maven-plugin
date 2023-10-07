@@ -37,7 +37,7 @@ jobs:
 
       - name: Debug GPG Passphrase
         run:
-          echo "GPG_PASSPHRASE: $GPG_PASSPHRASE"
+          echo "GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}"
 
       - name: verify
         run: mvn verify
