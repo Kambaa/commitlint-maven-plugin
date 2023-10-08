@@ -1,6 +1,6 @@
 # Git Message Check Maven Plugin
 ![Static Badge](https://img.shields.io/badge/My_First-Open_Source_Project-blue)
-![master](https://github.com/Kambaa/gmc-maven-plugin/actions/workflows/maven.yml/badge.svg)
+[![master](https://github.com/Kambaa/gmc-maven-plugin/actions/workflows/maven.yml/badge.svg)](https://github.com/Kambaa/gmc-maven-plugin/actions/workflows/maven.yml)
 [![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.github.kambaa/gmc-maven-plugin?server=https%3A%2F%2Fs01.oss.sonatype.org)](https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/kambaa/gmc-maven-plugin/0.0.1-SNAPSHOT/)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/Kambaa/gmc-maven-plugin/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Kambaa/gmc-maven-plugin/tree/master)
 
