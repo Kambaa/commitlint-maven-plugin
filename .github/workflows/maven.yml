@@ -26,7 +26,7 @@ jobs:
           distribution: 'temurin'
           java-version: '8'
           cache: maven
-          server-id: MAVEN_SETTINGS_SERVER_ID # Value of the distributionManagement/repository/id field of the pom.xml
+          server-id: ossrh # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: MAVEN_USERNAME # env variable for username in deploy
           server-password: MAVEN_CENTRAL_TOKEN  # env variable for token in deploy
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
@@ -44,7 +44,6 @@ jobs:
       - name: Publish to Apache Maven Central
         run: mvn deploy
         env:
-          MAVEN_SETTINGS_SERVER_ID: ossrh
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
