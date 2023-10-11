@@ -169,3 +169,4 @@ Only issue for me to see that there's a newline added between them in `command-o
 - https://jenkov.com/tutorials/maven/publish-to-central-maven-repository.html
 - https://shields.io/badges/static-badge
 - https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md
+- https://github.com/conventional-changelog/commitlint/blob/master/%40commitlint/is-ignored/src/defaults.ts
