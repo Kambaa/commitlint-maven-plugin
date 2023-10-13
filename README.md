@@ -170,3 +170,5 @@ Only issue for me to see that there's a newline added between them in `command-o
 - https://shields.io/badges/static-badge
 - https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md
 - https://github.com/conventional-changelog/commitlint/blob/master/%40commitlint/is-ignored/src/defaults.ts#L17-L29
+- https://github.com/conventional-changelog/commitlint/blob/master/%40commitlint/cli/fixtures/parser-preset/parser-preset.js
+- https://github.com/conventional-changelog/conventional-changelog/blob/eb3ab7bcd2266cd751e94c583510c8a85216a027/packages/git-raw-commits/index.js
