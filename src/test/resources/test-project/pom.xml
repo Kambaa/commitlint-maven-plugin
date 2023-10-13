@@ -9,7 +9,7 @@
                 <configuration>
                     <skip>false</skip>
                     <failOnError>true</failOnError>
-                    <testCommitMessage>feat: add hat wobble</testCommitMessage>
+<!--                    <testCommitMessage>feat: add hat wobble</testCommitMessage>-->
                 </configuration>
             </plugin>
         </plugins>

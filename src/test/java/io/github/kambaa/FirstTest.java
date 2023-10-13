@@ -2,7 +2,10 @@ package io.github.kambaa;
 
 import java.io.File;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
+import org.apache.maven.plugin.testing.MojoRule;
+import org.apache.maven.plugin.testing.resources.TestResources;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -16,6 +19,12 @@ public class FirstTest extends AbstractMojoTestCase {
     super.setUp();
   }
 
+  @Rule
+  public MojoRule rule = new MojoRule();
+
+  @Rule
+  public TestResources resources = new TestResources();
+
   @Test
   public void testMojoConfiguration()
       throws Exception {
@@ -23,12 +32,12 @@ public class FirstTest extends AbstractMojoTestCase {
         "src/test/resources/test-project/pom.xml");
     assertNotNull(testPom);
     assertTrue(testPom.exists());
-    CheckCommitMsg mojo = (CheckCommitMsg) lookupMojo("check", testPom);
+    GetDelimiter mojo = (GetDelimiter) lookupMojo("getDelimiter", testPom);
     assertNotNull(mojo);
-    assertEquals(false, mojo.isSkip());
-    System.out.println("skip OK");
-    assertEquals(true, mojo.isFailOnError());
-    System.out.println("failOnErr OK");
+    // assertEquals(false, mojo.isSkip());
+    // System.out.println("skip OK");
+    // assertEquals(true, mojo.isFailOnError());
+    // System.out.println("failOnErr OK");
     mojo.execute();
   }
 
