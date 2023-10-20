@@ -44,7 +44,7 @@ public class GetDelimiter extends MyBaseMojo {
     ignorePatterns.add(Pattern.compile("^Merge remote-tracking branch(\\s*)(.*)"));
     ignorePatterns.add(Pattern.compile("^Automatic merge(.*)"));
     ignorePatterns.add(Pattern.compile("^Auto-merged (.*?) into (.*)"));
-    ignorePatterns.add(Pattern.compile("^chore(\\([^)]+\\))?:"));
+    ignorePatterns.add(Pattern.compile("^(C|c)hore(\\([^)]+\\))?:"));
 
     // String s = "Merge pull request #1 from Kambaa/circleci-project-setup\n"
     //            + "CircleCI Commit:";
