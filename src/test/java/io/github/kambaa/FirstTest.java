@@ -1,6 +1,8 @@
 package io.github.kambaa;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.apache.maven.plugin.testing.MojoRule;
 import org.apache.maven.plugin.testing.resources.TestResources;
@@ -34,11 +36,13 @@ public class FirstTest extends AbstractMojoTestCase {
     assertTrue(testPom.exists());
     GetDelimiter mojo = (GetDelimiter) lookupMojo("getDelimiter", testPom);
     assertNotNull(mojo);
-    // assertEquals(false, mojo.isSkip());
-    // System.out.println("skip OK");
-    // assertEquals(true, mojo.isFailOnError());
-    // System.out.println("failOnErr OK");
+    File testGitLog = new File(getBasedir(),
+        "src/test/resources/test-project/test-git-log.txt");
+    mojo.setTestCommitMessage(new String(Files.readAllBytes(testGitLog.toPath()), StandardCharsets.UTF_8));
     mojo.execute();
+    assertNotNull(mojo.commitMessageList);
+    assertEquals(56, mojo.commitMessageList.size());
+
   }
 
 }

@@ -1,10 +1,15 @@
 package io.github.kambaa.utils;
 
+import static io.github.kambaa.utils.Utils.isEmpty;
+
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -37,6 +42,25 @@ public class MyBaseMojo extends AbstractMojo {
   @Override
   public void execute() throws MojoFailureException {
 
+  }
+
+  /**
+   * Splits given commit messages (generated via the git log command) by the given separator.
+   *
+   * @param gitLogMessages String value of git log --format='%B%n{GIVEN_SEPARATOR}'.
+   * @param separator      separator used on the git log command.
+   * @return List of strings that each one represents one of the commit messages.
+   */
+  protected List<String> splitCommitMessagesFromGitLog(String gitLogMessages, String separator) {
+    String[] commitMsgArr = gitLogMessages.split(separator);
+    if (isEmpty(commitMsgArr)) {
+      debug("Seperation result is empty, returning null!\n\tSeparator: %s\n\tGitLogMessages: %s ", separator, gitLogMessages);
+      return null;
+    }
+    return Stream.of(commitMsgArr).map(s -> {
+      // Trim new lines at the beginning and at the end of each splitted commit message(which is written by git log command.
+      return s.replaceAll("(?m)^\\s*", "").replaceAll("(?m)\\s*$", "");
+    }).collect(Collectors.toList());
   }
 
   /**
