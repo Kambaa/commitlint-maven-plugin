@@ -44,17 +44,22 @@ public class GetDelimiter extends MyBaseMojo {
     ignorePatterns.add(Pattern.compile("^Merge remote-tracking branch(\\s*)(.*)"));
     ignorePatterns.add(Pattern.compile("^Automatic merge(.*)"));
     ignorePatterns.add(Pattern.compile("^Auto-merged (.*?) into (.*)"));
+    ignorePatterns.add(Pattern.compile("^chore(\\([^)]+\\))?:"));
 
     // String s = "Merge pull request #1 from Kambaa/circleci-project-setup\n"
     //            + "CircleCI Commit:";
-    // error(""+ignorePatterns.get(0).matcher(s).matches());
+    // error(""+ignorePatterns.get(0).matcher(s).find());
 
     // commitMessageList.forEach(s -> {
-    //   Boolean anyMatchResult = ignorePatterns.stream().anyMatch(pattern -> pattern.matcher(s).matches());
+    //   Boolean anyMatchResult = ignorePatterns.stream().anyMatch(pattern -> pattern.matcher(s).find());
     //   info("\n\t\tIGNORE PATTERN CHECK:\n\t\t\t%s:\n\t\t\t%s\n\n", s, anyMatchResult);
     // });
 
-    List<String> commitMessagesToCheck = commitMessageList.stream().filter(s -> ignorePatterns.stream().noneMatch(pattern -> pattern.matcher(s).matches())).collect(Collectors.toList());
+    List<String> commitMessagesToCheck = commitMessageList.stream()
+        .filter(s -> ignorePatterns.stream()
+            .noneMatch(pattern -> pattern.matcher(s).find())
+        )
+        .collect(Collectors.toList());
 
     info("commitMessagesToCheck:");
     commitMessagesToCheck.forEach(s -> {

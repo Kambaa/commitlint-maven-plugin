@@ -41,7 +41,7 @@ public class FirstTest extends AbstractMojoTestCase {
     mojo.setTestCommitMessage(new String(Files.readAllBytes(testGitLog.toPath()), StandardCharsets.UTF_8));
     mojo.execute();
     assertNotNull(mojo.commitMessageList);
-    assertEquals(56, mojo.commitMessageList.size());
+    assertEquals(57, mojo.commitMessageList.size());
 
   }
 
