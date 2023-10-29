@@ -41,4 +41,10 @@ public class Utils {
   public static boolean isEmpty(List given) {
     return !(null != given && given.size() > 0);
   }
+
+  /**
+   * Default splitting text(without quotes).
+   * "\n------------------------ &gt;8 ------------------------\n"
+   */
+  public static final String DEFAULT_SEPARATOR = "\n------------------------ >8 ------------------------\n";
 }

@@ -1,4 +1,4 @@
-<!-- src/test/resources/test-project/pom.xml -->
+<!-- src/test/resources/test-project/pom2.xml -->
 <project>
     <build>
         <plugins>
@@ -9,7 +9,7 @@
                 <configuration>
                     <skip>false</skip>
                     <failOnError>true</failOnError>
-<!--                    <testCommitMessage>feat: add hat wobble</testCommitMessage>-->
+                    <file>src/test/resources/test-project/test-git-log.txt</file>
                 </configuration>
             </plugin>
         </plugins>
