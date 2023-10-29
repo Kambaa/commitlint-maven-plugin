@@ -105,6 +105,7 @@ public class CheckFile extends MyBaseMojo {
    * @return List of strings that each one represents one of the commit messages.
    */
   private List<String> splitCommitMessagesFromGitLog(String gitLogMessages, String separator) throws MojoFailureException {
+    // fixme: /r/n problem
     if (!gitLogMessages.contains(separator)) {
       debug("Given file does not contain any separator string!");
       throw new MojoFailureException("Given file does not contain separator text are you sure you are giving the `git log` with separator command result?");
