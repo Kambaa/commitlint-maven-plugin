@@ -38,7 +38,7 @@ public class FirstTest extends AbstractMojoTestCase {
     mojo.execute();
     assertNotNull(mojo.getCommitMessageList());
     assertEquals(57, mojo.getCommitMessageList().size());
-
+    assertEquals(52, mojo.getIgnoreFilteredCommitMessageList().size());
   }
 
 }

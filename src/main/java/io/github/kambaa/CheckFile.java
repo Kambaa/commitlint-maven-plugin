@@ -9,7 +9,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
@@ -21,7 +25,12 @@ import org.apache.maven.plugins.annotations.Parameter;
 /**
  * Checks commit message.
  */
-@Mojo(name = "checkFile")
+// todo: add custom checking method. https://github.com/Kambaa/gmc-maven-plugin/blob/1323d032130f067eaab41ba7ee9b17619699c464/src/main/java/dev/kambaabi/MyMojo.java
+@Mojo(name = "checkFile"
+    // ,
+    // requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
+    // defaultPhase = LifecyclePhase.COMPILE
+)
 public class CheckFile extends MyBaseMojo {
 
   /**
@@ -33,7 +42,7 @@ public class CheckFile extends MyBaseMojo {
 
   /**
    * Separator used in the git log command.
-   * Default is {@link Utils.DEFAULT_SEPARATOR}
+   * Default is {@see Utils.DEFAULT_SEPARATOR}
    */
   @Parameter(defaultValue = Utils.DEFAULT_SEPARATOR)
   private String separator = Utils.DEFAULT_SEPARATOR;
@@ -90,11 +99,48 @@ public class CheckFile extends MyBaseMojo {
    */
   private List<Pattern> ignorePatterns;
 
+  // @Parameter(defaultValue = "${project}", required = true, readonly = true)
+  // private MavenProject project;
+  // /**
+  //  * Custom class loader for custom message checking methods access.
+  //  */
+  // private ClassLoader customClassLoader;
+
+  // private ClassLoader getClassLoader() {
+  //   ClassLoader classLoader = null;
+  //   try {
+  //     List<String> classpathElements = project.getRuntimeClasspathElements();
+  //     if (null == classpathElements) {
+  //       return Thread.currentThread().getContextClassLoader();
+  //     }
+  //     URL[] urls = new URL[classpathElements.size()];
+  //
+  //     for (int i = 0; i < classpathElements.size(); ++i) {
+  //       urls[i] = new File((String) classpathElements.get(i)).toURI().toURL();
+  //     }
+  //     classLoader = new URLClassLoader(urls, getClass().getClassLoader());
+  //   } catch (Exception e) {
+  //     e.printStackTrace();
+  //   }
+  //   return classLoader;
+  // }
+
   @Override
   public void execute() throws MojoFailureException {
     ignorePatterns = new ArrayList<>();
     addInitialIgnorePatterns();
     addCustomIgnorePatternsIfGiven();
+
+    if (!isEmpty(customCheckingMethods)) {
+      final List<String> invalidPatterns = new ArrayList<>();
+      // customClassLoader = getClassLoader();
+      for (String customMethodString : customCheckingMethods) {
+        String className = customMethodString.substring(0, customMethodString.lastIndexOf("."));
+        String methodName = customMethodString.substring(customMethodString.lastIndexOf(".") + 1);
+        // customClassLoader.loadClass(validationConfig.getClassName());
+        // Method method = clazz.getDeclaredMethod(methodName, String.class);
+      }
+    }
 
     commitMessageList = splitCommitMessagesFromGitLog(checkAndReadGivenFile(), separator);
     debug("Extracted %d commits:\n--> %s", commitMessageList.size(),
@@ -105,6 +151,125 @@ public class CheckFile extends MyBaseMojo {
         String.join("\n--> ", ignoreFilteredCommitMessageList)
     );
 
+    // for (String msg : ignoreFilteredCommitMessageList) {
+    checkCommitMessage("awdawdawdwd");
+    // }
+
+  }
+
+  /**
+   * Checks commit message.
+   *
+   * @param commitMessage given commit message text.
+   * @throws MojoFailureException if any problems occur.
+   */
+  private void checkCommitMessage(String commitMessage) throws MojoFailureException {
+    debug("Commit checking started for: %s", commitMessage);
+    if (isEmpty(commitMessage)) {
+      debug("Commit message is null or empty, quitting");
+      exit("Commit message can not be null or empty!");
+    }
+
+    String[] splitStr = commitMessage.split("\n");
+    if (splitStr.length == 0) {
+      exit("Commit message can not be parsed!");
+    }
+    debug("Capture Group Count: %d", splitStr.length);
+
+    String subjectLine = splitStr[0];
+    debug("Extracted subject is: %s", subjectLine);
+
+    Pattern pattern = Pattern.compile("^(\\w*)(?:\\(([\\w\\-.]+)\\))?(!)?: (.*)(\\n[\\s\\S]*)?");
+    Matcher subjectMatcher = pattern.matcher(subjectLine);
+    if (!subjectMatcher.matches()) {
+      debug("Are you adding new lines before commit?");
+      debug("Subject Line is: %s", subjectLine);
+      debug("Commit Message is: %s", commitMessage);
+      exit("Commit message can not be parsed!\n\tStart by entering a commit message " +
+           "like this:\n\tfeat: add hat wobble\n\tYour commit message first line: `" + subjectLine + "`\n\tCommit message is: `" + commitMessage + "`");
+    }
+
+    String type = subjectMatcher.group(1);
+    String scope = subjectMatcher.group(2);
+    String breakingChangeIndicator = subjectMatcher.group(3);
+    String description = subjectMatcher.group(4);
+    debug("Extracted info from capture groups: ");
+    debug("type: %s", type);
+    debug("scope: %s", scope);
+    debug("indicator for a breaking change: %s", breakingChangeIndicator);
+    debug("description: %s", description);
+
+    Set<String> types = new HashSet<>(Arrays.asList(
+        "build",
+        "chore",
+        "ci",
+        "docs",
+        "feat",
+        "fix",
+        "perf",
+        "refactor",
+        "revert",
+        "style",
+        "test"));
+
+    String typeNamesForLogging = "`" + String.join("`,`", types.toArray(new String[0])) + "`";
+    debug("Checking type name: `%s` is one of %s", type, typeNamesForLogging);
+    if (!types.contains(type)) {
+      exit("Commit message is not valid!\n\tWritten type(`%s`) is not one of: %s",
+          type, typeNamesForLogging);
+      return;
+    }
+
+    debug("Checking scope: %s", scope);
+    if (null != scope) {
+      warn("You have a scope on your commit message!");
+    }
+    debug("checking breakingChangeIndicator: %s", breakingChangeIndicator);
+    if (null != breakingChangeIndicator) {
+      warn("You have an indicator for a BREAKING CHANGE! It is recommended that you have a body that " +
+           "explains this BREAKING CHANGE.");
+    }
+    debug("checking null/empty description: %s", description);
+    if (Utils.isEmpty(description)) {
+      exit("Commit message is not valid!\n\tWritten description is empty!\n\tYour commit message first line: `" + subjectLine + "`");
+      return;
+    }
+    debug("checking null/empty description %s", description);
+    if (description.endsWith(".")) {
+      exit("Commit message is not valid!\n\tWritten description can not be ended with a `.`\n\tYour commit message first line: `" + subjectLine + "`");
+      return;
+    }
+    debug("checking line-length of description: %s", description);
+    if (subjectLine.length() > 100) {
+      exit("Commit message is not valid!\n\tSubject line size must not be larger than " +
+           "100!(Yours is: " + subjectLine.length() + ")\n\tYour commit message first line: `" + subjectLine + "`");
+      return;
+    }
+    if (splitStr.length > 1) {
+      String newLineBeforeBody = splitStr[1];
+      debug("calculate newLineBeforeBody: %s", newLineBeforeBody);
+
+      debug("checking newLineBeforeBody is just a new line: %s", newLineBeforeBody);
+      if (null != newLineBeforeBody && !newLineBeforeBody.equals("")) {
+        exit("You have entered text which should just be a new line!\n\tConventional " +
+             "Commits' rules say that after the first line, you MUST enter a blank line before\n\tstarting " +
+             "for your commit message body/footer! For Example:\n\tfeat: add hat wobble\n\t\t\t\t\t\t\t\t\t\t" +
+             "<--empty line here\n\tSome details about " +
+             "your commit:\n\tBreaking changes,\n\tissue mentions,\n\tacknowledgements\n\tetc...");
+        return;
+      }
+    }
+    if (splitStr.length > 2) {
+      StringBuilder sb = new StringBuilder();
+      for (int i = 2; i < splitStr.length; i++) {
+        sb.append(splitStr[i]);
+        if (i != splitStr.length - 1) {
+          sb.append("\n");
+        }
+      }
+      String body = sb.toString();
+      debug("combine everything to variable `body`: %s", body);
+    }
   }
 
   private List<String> filterOutIgnoredCommits(List<String> commitMessagesToCheck) {
@@ -150,113 +315,6 @@ public class CheckFile extends MyBaseMojo {
     }
     return out;
   }
-
-  // /**
-  //  * checks commit message.
-  //  *
-  //  * @param testCommitMessage given commit message text.
-  //  * @throws MojoFailureException if any problems occur.
-  //  */
-  // protected void checkCommitMsg(String testCommitMessage) throws MojoFailureException {
-  //   String[] splitStr = testCommitMessage.split("\n");
-  //   if (splitStr.length == 0) {
-  //     exit("Commit message can not be parsed!");
-  //   }
-  //   debug("Capture Group Count: %d", splitStr.length);
-  //
-  //   String subjectLine = splitStr[0];
-  //   debug("Extracted subject is: %s", subjectLine);
-  //   Pattern pattern = Pattern.compile("^(\\w*)(?:\\(([\\w\\-.]+)\\))?(!)?: (.*)(\\n[\\s\\S]*)?");
-  //   Matcher subjectMatcher = pattern.matcher(subjectLine);
-  //   if (!subjectMatcher.matches()) {
-  //     debug("Are you adding new lines before commit?");
-  //     debug("Subject Line is: %s", subjectLine);
-  //     debug("Commit Message is: %s", testCommitMessage);
-  //     exit("Commit message can not be parsed!\n\tStart by entering a commit message " +
-  //          "like this:\n\tfeat: add hat wobble\n\tYour commit message first line: `" + subjectLine + "`\n\tCommit message is: `" + testCommitMessage + "`");
-  //   }
-  //
-  //   String type = subjectMatcher.group(1);
-  //   String scope = subjectMatcher.group(2);
-  //   String breakingChangeIndicator = subjectMatcher.group(3);
-  //   String description = subjectMatcher.group(4);
-  //   debug("Extracted info from capture groups: ");
-  //   debug("type: %s", type);
-  //   debug("scope: %s", scope);
-  //   debug("indicator for a breaking change: %s", breakingChangeIndicator);
-  //   debug("description: %s", description);
-  //
-  //   Set<String> types = new HashSet<>(Arrays.asList(
-  //       "build",
-  //       "chore",
-  //       "ci",
-  //       "docs",
-  //       "feat",
-  //       "fix",
-  //       "perf",
-  //       "refactor",
-  //       "revert",
-  //       "style",
-  //       "test"));
-  //   debug("checking type name: `%s`", type);
-  //
-  //   if (!types.contains(type)) {
-  //     exit("Commit message is not valid!\n\tWritten type(`" + type + "`) is not one of: " +
-  //          "`" + String.join("`,`", types.toArray(new String[0])) + "`");
-  //     return;
-  //   }
-  //   debug("done checking type name: %s", types);
-  //   debug("checking scope %s", scope);
-  //   if (null != scope) {
-  //     warn("You have a scope on your commit message!");
-  //   }
-  //   debug("checking breakingChangeIndicator %s", breakingChangeIndicator);
-  //   if (null != breakingChangeIndicator) {
-  //     warn("You have an indicator for a BREAKING CHANGE! It is recommended that you have a body that " +
-  //          "explains this BREAKING CHANGE.");
-  //   }
-  //   debug("checking null/empty description %s", description);
-  //   if (Utils.isEmpty(description)) {
-  //     exit("Commit message is not valid!\n\tWritten description is empty!\n\tYour commit message first line: `" + subjectLine + "`");
-  //     return;
-  //   }
-  //   debug("checking null/empty description %s", description);
-  //   if (description.endsWith(".")) {
-  //     exit("Commit message is not valid!\n\tWritten description can not be ended with a `.`\n\tYour commit message first line: `" + subjectLine + "`");
-  //     return;
-  //   }
-  //   debug("checking line-length of description %s", description);
-  //   if (subjectLine.length() > 100) {
-  //     exit("Commit message is not valid!\n\tSubject line size must not be larger than " +
-  //          "100!(Yours is: " + subjectLine.length() + ")\n\tYour commit message first line: `" + subjectLine + "`");
-  //     return;
-  //   }
-  //   if (splitStr.length > 1) {
-  //     String newLineBeforeBody = splitStr[1];
-  //     debug("calculate newLineBeforeBody %s", newLineBeforeBody);
-  //
-  //     debug("checking newLineBeforeBody is just a new line: %s", newLineBeforeBody);
-  //     if (null != newLineBeforeBody && !newLineBeforeBody.equals("")) {
-  //       exit("You have entered text which should just be a new line!\n\tConventional " +
-  //            "Commits' rules say that after the first line, you MUST enter a blank line before\n\tstarting " +
-  //            "for your commit message body/footer! For Example:\n\tfeat: add hat wobble\n\t\t\t\t\t\t\t\t\t\t" +
-  //            "<--empty line here\n\tSome details about " +
-  //            "your commit:\n\tBreaking changes,\n\tissue mentions,\n\tacknowledgements\n\tetc...");
-  //       return;
-  //     }
-  //   }
-  //   if (splitStr.length > 2) {
-  //     StringBuilder sb = new StringBuilder();
-  //     for (int i = 2; i < splitStr.length; i++) {
-  //       sb.append(splitStr[i]);
-  //       if (i != splitStr.length - 1) {
-  //         sb.append("\n");
-  //       }
-  //     }
-  //     String body = sb.toString();
-  //     debug("combine everything to variable `body`: %s", body);
-  //   }
-  // }
 
   private String checkAndReadGivenFile() throws MojoFailureException {
     try {
@@ -309,10 +367,6 @@ public class CheckFile extends MyBaseMojo {
       ignorePatterns.add(Pattern.compile("^Auto-merged (.*?) into (.*)"));
       ignorePatterns.add(Pattern.compile("^(C|c)hore(\\([^)]+\\))?:"));
     }
-  }
-
-  private void filterIgnoredCommitMessagePatterns() {
-
   }
 
   public String getFile() {

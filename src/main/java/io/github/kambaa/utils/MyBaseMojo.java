@@ -62,6 +62,7 @@ public class MyBaseMojo extends AbstractMojo {
    */
   protected void debug(String msg, Object... args) {
     // getLog().debug(String.format(msg, args));
+    // todo: no logs displayed when debugging tests. remove below and uncomment above later.
     System.err.println(String.format(msg, args));
   }
 
