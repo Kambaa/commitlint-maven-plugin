@@ -47,4 +47,8 @@ public class Utils {
    * "\n------------------------ &gt;8 ------------------------\n"
    */
   public static final String DEFAULT_SEPARATOR = "\n------------------------ >8 ------------------------\n";
+
+  public static boolean dummyCheckMessage(String msg) {
+    return true;
+  }
 }

@@ -10,6 +10,16 @@
                     <skip>false</skip>
                     <failOnError>true</failOnError>
                     <file>src/test/resources/test-project/test-git-log.txt</file>
+
+                    <enableDefaultIgnorePatterns>true</enableDefaultIgnorePatterns>
+                    <customIgnorePatterns>
+                        <pattern>^(C|c)hore(\([^)]+\))?:</pattern>
+                    </customIgnorePatterns>
+
+                    <enableDefaultMessageChecking>true</enableDefaultMessageChecking>
+                    <customCheckingMethods>
+                        <method>io.github.kambaa.utils.Utils.dummyCheckMessage</method>
+                    </customCheckingMethods>
                 </configuration>
             </plugin>
         </plugins>

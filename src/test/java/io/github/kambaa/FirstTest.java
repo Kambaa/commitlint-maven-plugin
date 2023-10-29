@@ -29,14 +29,11 @@ public class FirstTest extends AbstractMojoTestCase {
   public void testMojoConfiguration()
       throws Exception {
     File testPom = new File(getBasedir(),
-        "src/test/resources/test-project/pom.xml");
+        "src/test/resources/test-project/test-pom.xml");
     assertNotNull(testPom);
     assertTrue(testPom.exists());
     CheckFile mojo = (CheckFile) lookupMojo("checkFile", testPom);
     assertNotNull(mojo);
-    // File testGitLog = new File(getBasedir(),
-    //     "src/test/resources/test-project/test-git-log.txt");
-    // mojo.setTestCommitMessage(new String(Files.readAllBytes(testGitLog.toPath()), StandardCharsets.UTF_8));
     mojo.setMavenDebug(true);
     mojo.execute();
     assertNotNull(mojo.getCommitMessageList());
