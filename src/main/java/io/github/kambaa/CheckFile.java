@@ -36,13 +36,13 @@ public class CheckFile extends MyBaseMojo {
    * Default is {@link Utils.DEFAULT_SEPARATOR}
    */
   @Parameter(defaultValue = Utils.DEFAULT_SEPARATOR)
-  private String separator= Utils.DEFAULT_SEPARATOR;
+  private String separator = Utils.DEFAULT_SEPARATOR;
 
   /**
    * Enables default ignore patterns. Default is true.
    */
   @Parameter(defaultValue = "true")
-  private boolean enableDefaultIgnorePatterns=true;
+  private boolean enableDefaultIgnorePatterns = true;
 
   /**
    * Add custom ignore patterns.
@@ -91,11 +91,10 @@ public class CheckFile extends MyBaseMojo {
         )
         .collect(Collectors.toList());
     if (mavenDebug) {
-      List<String> ignoredCommits = out.stream()
-          .filter(element -> !commitMessagesToCheck.contains(element))
+      List<String> ignoredCommits = commitMessagesToCheck.stream()
+          .filter(element -> !out.contains(element))
           .collect(Collectors.toList());
-      debug("These %d commits are filtered through ignore patterns:", ignoredCommits.size());
-      ignoredCommits.forEach(s -> debug("\t%s", s));
+      debug("These %d commits are filtered through ignore patterns:\n--> %s", ignoredCommits.size(), String.join("\n--> ", ignoredCommits));
     }
     return out;
   }
@@ -243,6 +242,5 @@ public class CheckFile extends MyBaseMojo {
   public List<String> getIgnoreFilteredCommitMessageList() {
     return ignoreFilteredCommitMessageList;
   }
-
 
 }

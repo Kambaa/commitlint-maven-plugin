@@ -37,6 +37,7 @@ public class FirstTest extends AbstractMojoTestCase {
     // File testGitLog = new File(getBasedir(),
     //     "src/test/resources/test-project/test-git-log.txt");
     // mojo.setTestCommitMessage(new String(Files.readAllBytes(testGitLog.toPath()), StandardCharsets.UTF_8));
+    mojo.setMavenDebug(true);
     mojo.execute();
     assertNotNull(mojo.getCommitMessageList());
     assertEquals(57, mojo.getCommitMessageList().size());
