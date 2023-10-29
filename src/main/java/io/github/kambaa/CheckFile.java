@@ -77,11 +77,9 @@ public class CheckFile extends MyBaseMojo {
     addCustomIgnorePatternsIfGiven();
 
     commitMessageList = splitCommitMessagesFromGitLog(checkAndReadGivenFile(), separator);
-    debug("Extracted commit messages: ");
-    debugLogCommitMessageList(commitMessageList);
+    debug("Extracted %d commits:\n--> %s", commitMessageList.size(), String.join("\n--> ", commitMessageList));
     ignoreFilteredCommitMessageList = filterOutIgnoredCommits(commitMessageList);
-    debug("Remaining commit messages(filtered out ignored commits): ");
-    debugLogCommitMessageList(ignoreFilteredCommitMessageList);
+    debug("Remaining %d commit messages(filtered out ignored commits):\n--> %s", ignoreFilteredCommitMessageList.size(), String.join("\n--> ", ignoreFilteredCommitMessageList));
   }
 
   private List<String> filterOutIgnoredCommits(List<String> commitMessagesToCheck) {
@@ -97,15 +95,6 @@ public class CheckFile extends MyBaseMojo {
       debug("These %d commits are filtered through ignore patterns:\n--> %s", ignoredCommits.size(), String.join("\n--> ", ignoredCommits));
     }
     return out;
-  }
-
-  private void debugLogCommitMessageList(List<String> commitMessageList) {
-    if (mavenDebug) {
-      debug("%d commits", commitMessageList.size());
-      commitMessageList.forEach(s -> {
-        debug("\t%s", s);
-      });
-    }
   }
 
   /**

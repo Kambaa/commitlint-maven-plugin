@@ -61,7 +61,8 @@ public class MyBaseMojo extends AbstractMojo {
    * @param args args
    */
   protected void debug(String msg, Object... args) {
-    getLog().debug(String.format(msg, args));
+    // getLog().debug(String.format(msg, args));
+    System.err.println(String.format(msg, args));
   }
 
   /**
