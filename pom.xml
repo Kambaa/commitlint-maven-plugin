@@ -59,6 +59,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.0-alpha1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -123,6 +129,12 @@
                     <!-- on my settings xml, i defined my passphrase in a server block in settings.xml -->
                     <passphraseServerId>gpg.passphrase</passphraseServerId>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.4</version>
             </plugin>
         </plugins>
     </build>
