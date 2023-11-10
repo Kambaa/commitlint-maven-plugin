@@ -38,9 +38,9 @@ jobs:
       - name: Test
         run: mvn test
 
-      - name: Verify
-        run: mvn test
-
+#      - name: Verify
+#        run: mvn test
+#
 #      - name: Publish to Apache Maven Central
 #        run: mvn deploy
 #        env:
