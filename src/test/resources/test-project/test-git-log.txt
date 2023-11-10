@@ -34,6 +34,7 @@ feat: testing for the first poc
 added poc notes on the readme file
 
 ------------------------ >8 ------------------------
+Merge pull request #2 from Kambaa/circleci-project-setup
 CircleCI Commit
 ------------------------ >8 ------------------------
 feat: testing for the first poc
@@ -41,13 +42,13 @@ feat: testing for the first poc
 added poc notes on the readme file
 
 ------------------------ >8 ------------------------
-doc: update readme
+docs: update readme
 
 ------------------------ >8 ------------------------
-doc: update readme
+docs: update readme
 
 ------------------------ >8 ------------------------
-doc: update readme
+docs: update readme
 
 ------------------------ >8 ------------------------
 refactor: change project name and some docs
@@ -89,7 +90,7 @@ Merge branch 'master' of https://github.com/Kambaa/commitlint-maven-plugin
 feat: add test config working structure
 
 ------------------------ >8 ------------------------
-Create maven.yml
+feat: Create maven.yml
 ------------------------ >8 ------------------------
 feat: simple, working condition
 
@@ -103,7 +104,7 @@ feat: simple, working condition
 feat: simple, working condition
 
 ------------------------ >8 ------------------------
-doc: readme update
+docs: readme update
 
 ------------------------ >8 ------------------------
 refactor: testing regex instead of split
@@ -122,16 +123,16 @@ docs: update readme
 ------------------------ >8 ------------------------
 docs: update readme
 ------------------------ >8 ------------------------
-doc: update readme
+docs: update readme
 
 ------------------------ >8 ------------------------
-doc: add testing config
+docs: add testing config
 
 ------------------------ >8 ------------------------
 refactor: update config structure, add validators, enhance mojo
 
 ------------------------ >8 ------------------------
-doc: add mojo class loading link on readme
+docs: add mojo class loading link on readme
 
 ------------------------ >8 ------------------------
 refactor: add check from config structure

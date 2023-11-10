@@ -1,5 +1,7 @@
 package io.github.kambaa;
 
+import static io.github.kambaa.utils.Utils.COMMIT_MESSAGE_SPLITTING_REGEX;
+import static io.github.kambaa.utils.Utils.DEFAULT_COMMIT_MESSAGE_SUBJECT_TYPES;
 import static io.github.kambaa.utils.Utils.isEmpty;
 
 import io.github.kambaa.utils.MyBaseMojo;
@@ -9,7 +11,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -70,6 +71,45 @@ public class CheckFile extends MyBaseMojo {
   private boolean enableDefaultMessageChecking = true;
 
   /**
+   * Enables usages of default commit message subject types. Which are:
+   * build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test.
+   */
+  @Parameter(defaultValue = "true")
+  private boolean enableDefaultCommitSubjectTypes = true;
+
+  /**
+   * Enable forcing `subject line must not end with .` checks.
+   * <br>For example:<br>
+   * feat: add hat wobble. <-- notice the dot at the end.<br>
+   * If set to true, it will cause error and quit if this case is found.<br>
+   * If set to false, only a warning will be generated if this case is found.
+   * Default is false.
+   */
+  @Parameter(defaultValue = "true")
+  private boolean enableForcingSubjectEndsWithCommaErrorCheck = true;
+
+  /**
+   * Enable forcing `an empty new line must be between subject and body.` checks.
+   * <br>For example:<br>
+   * feat: add hat wobble.<br> <-- notice the empty line here<br><br>this is commit body<br>
+   * If set to true, it will cause error and quit if this case is found.<br>
+   * If set to false, only a warning will be generated if this case is found.
+   * Default is false.
+   */
+  @Parameter(defaultValue = "false")
+  private boolean enableForcingNewLineBetweenSubjectAndBodyCheck = false;
+
+  /**
+   * Add custom commit message subject types.
+   * These types will be added to the default subject types
+   * if `enableDefaultCommitSubjectTypes` is `true`. If you want to
+   * run only custom defined  message subject types to check from,
+   * set `enableDefaultCommitSubjectTypes` to `false`.
+   */
+  @Parameter(property = "subjectType")
+  private List<String> customCommitSubjectTypes;
+
+  /**
    * Custom commit message checking static methods.
    * i.e:
    * com.example.MyClass.myCustomCommitMessageCheck
@@ -98,6 +138,12 @@ public class CheckFile extends MyBaseMojo {
    * Both initial and custom patterns will be filled here upon execution.
    */
   private List<Pattern> ignorePatterns;
+
+  /**
+   * Subject types list for checking.
+   * Both initial and custom types will be filled here upon execution.
+   */
+  private Set<String> subjectTypeList;
 
   // @Parameter(defaultValue = "${project}", required = true, readonly = true)
   // private MavenProject project;
@@ -131,6 +177,10 @@ public class CheckFile extends MyBaseMojo {
     addInitialIgnorePatterns();
     addCustomIgnorePatternsIfGiven();
 
+    subjectTypeList = new HashSet<>();
+    addInitialSubjectTypeList();
+    addCustomCommitSubjectTypesIfGiven();
+
     if (!isEmpty(customCheckingMethods)) {
       final List<String> invalidPatterns = new ArrayList<>();
       // customClassLoader = getClassLoader();
@@ -151,9 +201,9 @@ public class CheckFile extends MyBaseMojo {
         String.join("\n--> ", ignoreFilteredCommitMessageList)
     );
 
-    // for (String msg : ignoreFilteredCommitMessageList) {
-    checkCommitMessage("awdawdawdwd");
-    // }
+    for (String msg : ignoreFilteredCommitMessageList) {
+      checkCommitMessage(msg);
+    }
 
   }
 
@@ -179,14 +229,14 @@ public class CheckFile extends MyBaseMojo {
     String subjectLine = splitStr[0];
     debug("Extracted subject is: %s", subjectLine);
 
-    Pattern pattern = Pattern.compile("^(\\w*)(?:\\(([\\w\\-.]+)\\))?(!)?: (.*)(\\n[\\s\\S]*)?");
+    Pattern pattern = Pattern.compile(COMMIT_MESSAGE_SPLITTING_REGEX);
     Matcher subjectMatcher = pattern.matcher(subjectLine);
     if (!subjectMatcher.matches()) {
-      debug("Are you adding new lines before commit?");
-      debug("Subject Line is: %s", subjectLine);
+      debug("Commit message can not be parsed according to the pattern: %s", pattern.pattern());
       debug("Commit Message is: %s", commitMessage);
-      exit("Commit message can not be parsed!\n\tStart by entering a commit message " +
-           "like this:\n\tfeat: add hat wobble\n\tYour commit message first line: `" + subjectLine + "`\n\tCommit message is: `" + commitMessage + "`");
+      debug("Subject Line is: %s", subjectLine);
+      exit("Commit message can not be parsed!\nStart by entering a commit message " +
+           "like this:\n\tfeat: add hat wobble\nYour commit message's subject(first line): `" + subjectLine + "`\nCommit message is: `" + commitMessage + "`");
     }
 
     String type = subjectMatcher.group(1);
@@ -199,76 +249,66 @@ public class CheckFile extends MyBaseMojo {
     debug("indicator for a breaking change: %s", breakingChangeIndicator);
     debug("description: %s", description);
 
-    Set<String> types = new HashSet<>(Arrays.asList(
-        "build",
-        "chore",
-        "ci",
-        "docs",
-        "feat",
-        "fix",
-        "perf",
-        "refactor",
-        "revert",
-        "style",
-        "test"));
-
-    String typeNamesForLogging = "`" + String.join("`,`", types.toArray(new String[0])) + "`";
-    debug("Checking type name: `%s` is one of %s", type, typeNamesForLogging);
-    if (!types.contains(type)) {
-      exit("Commit message is not valid!\n\tWritten type(`%s`) is not one of: %s",
-          type, typeNamesForLogging);
+    String typeNamesForLogging = "`" + String.join("`,`", subjectTypeList.toArray(new String[0])) + "`";
+    debug("checking written type name: `%s` is one of %s", type, typeNamesForLogging);
+    if (!subjectTypeList.contains(type)) {
+      exit("Commit message is not valid!\n\tWritten type(`%s`) is not one of: %s\nCommit message is: %s",
+          type, typeNamesForLogging, commitMessage);
       return;
     }
 
-    debug("Checking scope: %s", scope);
+    debug("checking scope: %s", scope);
     if (null != scope) {
-      warn("You have a scope on your commit message!");
+      info("You have a scope on your commit message!");
     }
-    debug("checking breakingChangeIndicator: %s", breakingChangeIndicator);
+
+    debug("checking breaking change indicator: %s", breakingChangeIndicator);
     if (null != breakingChangeIndicator) {
-      warn("You have an indicator for a BREAKING CHANGE! It is recommended that you have a body that " +
+      info("You have an indicator for a BREAKING CHANGE! It is recommended that you have a body that " +
            "explains this BREAKING CHANGE.");
     }
+
     debug("checking null/empty description: %s", description);
     if (Utils.isEmpty(description)) {
-      exit("Commit message is not valid!\n\tWritten description is empty!\n\tYour commit message first line: `" + subjectLine + "`");
+      exit("Commit message is not valid!\n\tNo description found on commit message subject(first line)!\n\tYour commit message subject(first line): `%s`", subjectLine);
       return;
     }
-    debug("checking null/empty description %s", description);
+
+    debug("checking ending with `.` on subject description: %s", description);
     if (description.endsWith(".")) {
-      exit("Commit message is not valid!\n\tWritten description can not be ended with a `.`\n\tYour commit message first line: `" + subjectLine + "`");
-      return;
+      if (enableForcingSubjectEndsWithCommaErrorCheck) {
+        exit("Commit message is not valid!\n\tYour commit message subject(first line) description must not end with a `.`\nYour commit message subject(first line): `%s`", subjectLine);
+        return;
+      } else {
+        warn("Your commit message subject(first line) description must not end with a `.`\nYour commit message subject(first line): `%s`", subjectLine);
+      }
     }
+
     debug("checking line-length of description: %s", description);
     if (subjectLine.length() > 100) {
       exit("Commit message is not valid!\n\tSubject line size must not be larger than " +
-           "100!(Yours is: " + subjectLine.length() + ")\n\tYour commit message first line: `" + subjectLine + "`");
+           "100!(Yours is: " + subjectLine.length() + ")\nYour commit message subject(first line): `" + subjectLine + "`");
       return;
     }
+
     if (splitStr.length > 1) {
       String newLineBeforeBody = splitStr[1];
       debug("calculate newLineBeforeBody: %s", newLineBeforeBody);
 
       debug("checking newLineBeforeBody is just a new line: %s", newLineBeforeBody);
       if (null != newLineBeforeBody && !newLineBeforeBody.equals("")) {
-        exit("You have entered text which should just be a new line!\n\tConventional " +
-             "Commits' rules say that after the first line, you MUST enter a blank line before\n\tstarting " +
-             "for your commit message body/footer! For Example:\n\tfeat: add hat wobble\n\t\t\t\t\t\t\t\t\t\t" +
-             "<--empty line here\n\tSome details about " +
-             "your commit:\n\tBreaking changes,\n\tissue mentions,\n\tacknowledgements\n\tetc...");
-        return;
-      }
-    }
-    if (splitStr.length > 2) {
-      StringBuilder sb = new StringBuilder();
-      for (int i = 2; i < splitStr.length; i++) {
-        sb.append(splitStr[i]);
-        if (i != splitStr.length - 1) {
-          sb.append("\n");
+        String str = "You have entered text which should just be a new line!\nConventional " +
+                     "Commits' rules say that after the first line, you MUST enter a blank line before\nstarting " +
+                     "for your commit message body/footer! For Example:\nfeat: add hat wobble\n" +
+                     "\t\t\t<--empty line here\nSome details about " +
+                     "your commit:\nBreaking changes,\nissue mentions,\nacknowledgements\netc...";
+        if (enableForcingNewLineBetweenSubjectAndBodyCheck) {
+          exit(str);
+          return;
+        } else {
+          warn(str);
         }
       }
-      String body = sb.toString();
-      debug("combine everything to variable `body`: %s", body);
     }
   }
 
@@ -369,6 +409,19 @@ public class CheckFile extends MyBaseMojo {
     }
   }
 
+  private void addInitialSubjectTypeList() {
+    if (enableDefaultCommitSubjectTypes) {
+      subjectTypeList.addAll(DEFAULT_COMMIT_MESSAGE_SUBJECT_TYPES);
+    }
+  }
+
+  private void addCustomCommitSubjectTypesIfGiven() {
+    if (!isEmpty(customCommitSubjectTypes)) {
+      final Set<String> customSubjectTypes = new HashSet<>(customCommitSubjectTypes);
+      subjectTypeList.addAll(customSubjectTypes);
+    }
+  }
+
   public String getFile() {
     return file;
   }
@@ -433,5 +486,41 @@ public class CheckFile extends MyBaseMojo {
 
   public void setCustomCheckingMethods(List<String> customCheckingMethods) {
     this.customCheckingMethods = customCheckingMethods;
+  }
+
+  public boolean isEnableDefaultCommitSubjectTypes() {
+    return enableDefaultCommitSubjectTypes;
+  }
+
+  public void setEnableDefaultCommitSubjectTypes(boolean enableDefaultCommitSubjectTypes) {
+    this.enableDefaultCommitSubjectTypes = enableDefaultCommitSubjectTypes;
+  }
+
+  public List<String> getCustomCommitSubjectTypes() {
+    return customCommitSubjectTypes;
+  }
+
+  public void setCustomCommitSubjectTypes(List<String> customCommitSubjectTypes) {
+    this.customCommitSubjectTypes = customCommitSubjectTypes;
+  }
+
+  public Set<String> getSubjectTypeList() {
+    return subjectTypeList;
+  }
+
+  public boolean isEnableForcingSubjectEndsWithCommaErrorCheck() {
+    return enableForcingSubjectEndsWithCommaErrorCheck;
+  }
+
+  public void setEnableForcingSubjectEndsWithCommaErrorCheck(boolean enableForcingSubjectEndsWithCommaErrorCheck) {
+    this.enableForcingSubjectEndsWithCommaErrorCheck = enableForcingSubjectEndsWithCommaErrorCheck;
+  }
+
+  public boolean isEnableForcingNewLineBetweenSubjectAndBodyCheck() {
+    return enableForcingNewLineBetweenSubjectAndBodyCheck;
+  }
+
+  public void setEnableForcingNewLineBetweenSubjectAndBodyCheck(boolean enableForcingNewLineBetweenSubjectAndBodyCheck) {
+    this.enableForcingNewLineBetweenSubjectAndBodyCheck = enableForcingNewLineBetweenSubjectAndBodyCheck;
   }
 }
