@@ -41,12 +41,12 @@ jobs:
       - name: Verify
         run: mvn test
 
-      - name: Publish to Apache Maven Central
-        run: mvn deploy
-        env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+#      - name: Publish to Apache Maven Central
+#        run: mvn deploy
+#        env:
+#          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+#          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
+#          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 #         Burda tanıttıklarımızı yukarıda kullanabiliyoruz anlaşılan: https://docs.github.com/en/actions/learn-github-actions/variables#passing-values-between-steps-and-jobs-in-a-workflow
 
 # https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-Apache-Maven 
