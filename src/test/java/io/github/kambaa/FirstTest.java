@@ -37,7 +37,13 @@ public class FirstTest extends AbstractMojoTestCase {
     assertNotNull(mojo.getCommitMessageList());
 
     assertEquals(mojo.getFile(), "src/test/resources/test-project/test-git-log.txt");
+    mojo.setFile("src/test/resources/test-project/test-git-log.txt");
+    assertEquals(mojo.getFile(), "src/test/resources/test-project/test-git-log.txt");
+
     assertEquals(mojo.getSeparator(), Utils.DEFAULT_SEPARATOR);
+    mojo.setSeparator(Utils.DEFAULT_SEPARATOR);
+    assertEquals(mojo.getSeparator(), Utils.DEFAULT_SEPARATOR);
+
     assertNotNull(mojo.getCustomIgnorePatterns());
     assertEquals(mojo.getCustomIgnorePatterns().size(), 1);
     assertEquals(mojo.getCustomIgnorePatterns().get(0), "^(C|c)hore(\\([^)]+\\))?:");

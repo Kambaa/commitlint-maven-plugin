@@ -10,8 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.maven.plugin.MojoFailureException;
@@ -148,21 +146,12 @@ public class CheckFile extends MyBaseMojo {
   public void setSeparator(String separator) {
     this.separator = separator;
   }
-
   public List<String> getCommitMessageList() {
     return commitMessageList;
   }
 
-  public List<Pattern> getIgnorePatterns() {
-    return ignorePatterns;
-  }
-
   public List<String> getIgnoreFilteredCommitMessageList() {
     return ignoreFilteredCommitMessageList;
-  }
-
-  public Set<String> getSubjectTypeList() {
-    return subjectTypeList;
   }
 
 }

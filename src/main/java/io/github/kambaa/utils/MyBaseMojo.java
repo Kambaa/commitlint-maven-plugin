@@ -511,4 +511,12 @@ public class MyBaseMojo extends AbstractMojo {
   public void setEnableForcingNewLineBetweenSubjectAndBodyCheck(boolean enableForcingNewLineBetweenSubjectAndBodyCheck) {
     this.enableForcingNewLineBetweenSubjectAndBodyCheck = enableForcingNewLineBetweenSubjectAndBodyCheck;
   }
+  public List<Pattern> getIgnorePatterns() {
+    return ignorePatterns;
+  }
+
+  public Set<String> getSubjectTypeList() {
+    return subjectTypeList;
+  }
+
 }

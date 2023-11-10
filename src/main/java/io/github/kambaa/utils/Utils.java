@@ -11,7 +11,7 @@ public class Utils {
   /**
    * Constructor.
    */
-  public Utils() {
+  private Utils() {
   }
 
   /**
