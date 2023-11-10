@@ -36,7 +36,7 @@ jobs:
         run: mvn clean compile
 
       - name: Test
-        run: mvn test
+        run: mvn test -X
 
 #      - name: Verify
 #        run: mvn test
