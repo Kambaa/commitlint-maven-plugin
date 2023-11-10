@@ -320,9 +320,8 @@ public class CheckFile extends MyBaseMojo {
 
       debug("checking newLineBeforeBody is just a new line: %s", newLineBeforeBody);
       if (null != newLineBeforeBody && !newLineBeforeBody.equals("")) {
-        String str = "You have entered text which should just be a new line!\nConventional " +
-                     "Commits' rules say that after the first line, you MUST enter a blank line before\nstarting " +
-                     "for your commit message body/footer! For Example:\nfeat: add hat wobble\n" +
+        String str = "You have entered text which should just be a new line! Conventional " +
+                     "Commits' rules say that after the first line, you MUST enter a blank line first! For Example:\nfeat: add hat wobble\n" +
                      "\t\t\t<--empty line here\nSome details about " +
                      "your commit:\nBreaking changes,\nissue mentions,\nacknowledgements\netc...";
         if (enableForcingNewLineBetweenSubjectAndBodyCheck) {
