@@ -32,35 +32,37 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }} # Value of the GPG private key to import
           gpg-passphrase: MAVEN_GPG_PASSPHRASE  # env variable for GPG private key passphrase
 
-      - name: Build with Maven
+      # VERIFY NEEDS GPG PASSPHRASE FOR THE SIGNING, added in env.
+      - name: Verify
         run: mvn --batch-mode --update-snapshots verify
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
+      # JACOCO REPORT FILE UPLOAD..
       - name: Upload jacoco coverage
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: coverage-results-report
           path: target/site/jacoco/
           if-no-files-found: error
 
-#      - name: Clean & Compile
-#        run: mvn clean compile
-#
-#      - name: Test
-#        run: mvn test -X
-#
-#      - name: Verify
-#        run: mvn verify
-#
-#      - name: Publish to Apache Maven Central
-#        run: mvn deploy
-#        env:
-#          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-#          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
-#          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      #      - name: Clean & Compile
+      #        run: mvn clean compile
+      #
+      #      - name: Test
+      #        run: mvn test -X
+      #
+      #      - name: Verify
+      #        run: mvn verify
+      #
+      - name: Publish to Apache Maven Central
+        run: mvn deploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 #         Burda tanıttıklarımızı yukarıda kullanabiliyoruz anlaşılan: https://docs.github.com/en/actions/learn-github-actions/variables#passing-values-between-steps-and-jobs-in-a-workflow
 
 # https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-Apache-Maven 
