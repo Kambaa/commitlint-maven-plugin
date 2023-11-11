@@ -20,6 +20,12 @@ import org.apache.maven.plugins.annotations.Parameter;
  */
 public class MyBaseMojo extends AbstractMojo {
   /**
+   * Constructor.
+   */
+  public MyBaseMojo() {
+  }
+
+  /**
    * Skips execution if true.
    */
   @Parameter(defaultValue = "false")
@@ -53,7 +59,7 @@ public class MyBaseMojo extends AbstractMojo {
   /**
    * Enable forcing `subject line must not end with .` checks.
    * <br>For example:<br>
-   * feat: add hat wobble. <-- notice the dot at the end.<br>
+   * feat: add hat wobble. -- notice the dot at the end.<br>
    * If set to true, it will cause error and quit if this case is found.<br>
    * If set to false, only a warning will be generated if this case is found.
    * Default is false.
@@ -64,7 +70,7 @@ public class MyBaseMojo extends AbstractMojo {
   /**
    * Enable forcing `an empty new line must be between subject and body.` checks.
    * <br>For example:<br>
-   * feat: add hat wobble.<br> <-- notice the empty line here<br><br>this is commit body<br>
+   * feat: add hat wobble.<br> -- notice the empty line here<br><br>this is commit body<br>
    * If set to true, it will cause error and quit if this case is found.<br>
    * If set to false, only a warning will be generated if this case is found.
    * Default is false.
@@ -300,7 +306,7 @@ public class MyBaseMojo extends AbstractMojo {
       if (null != newLineBeforeBody && !newLineBeforeBody.equals("")) {
         String str = "You have entered text which should just be a new line! Conventional " +
                      "Commits' rules say that after the first line, you MUST enter a blank line first! For Example:\nfeat: add hat wobble\n" +
-                     "\t\t\t<--empty line here\nSome details about " +
+                     "\t\t\t---empty line here\nSome details about " +
                      "your commit:\nBreaking changes,\nissue mentions,\nacknowledgements\netc...";
         if (enableForcingNewLineBetweenSubjectAndBodyCheck) {
           throw new MojoFailureException(str);
@@ -311,19 +317,24 @@ public class MyBaseMojo extends AbstractMojo {
     }
   }
 
+  /**
+   * addInitialSubjectTypeList.
+   */
   protected void addInitialSubjectTypeList() {
     if (enableDefaultCommitSubjectTypes) {
       subjectTypeList.addAll(DEFAULT_COMMIT_MESSAGE_SUBJECT_TYPES);
     }
   }
 
+  /**
+   * addCustomCommitSubjectTypesIfGiven.
+   */
   protected void addCustomCommitSubjectTypesIfGiven() {
     if (!isEmpty(customCommitSubjectTypes)) {
       final Set<String> customSubjectTypes = new HashSet<>(customCommitSubjectTypes);
       subjectTypeList.addAll(customSubjectTypes);
     }
   }
-
 
   // @Parameter(defaultValue = "${project}", required = true, readonly = true)
   // private MavenProject project;
@@ -441,81 +452,182 @@ public class MyBaseMojo extends AbstractMojo {
     this.failOnError = failOnError;
   }
 
+  /**
+   * isMavenDebug.
+   *
+   * @return mavenDebug
+   */
   public boolean isMavenDebug() {
     return mavenDebug;
   }
 
+  /**
+   * setMavenDebug.
+   *
+   * @param mavenDebug mavenDebug
+   */
   public void setMavenDebug(boolean mavenDebug) {
     this.mavenDebug = mavenDebug;
   }
 
+  /**
+   * isEnableDefaultIgnorePatterns.
+   *
+   * @return enableDefaultIgnorePatterns
+   */
   public boolean isEnableDefaultIgnorePatterns() {
     return enableDefaultIgnorePatterns;
   }
 
+  /**
+   * setEnableDefaultIgnorePatterns.
+   *
+   * @param enableDefaultIgnorePatterns enableDefaultIgnorePatterns
+   */
   public void setEnableDefaultIgnorePatterns(boolean enableDefaultIgnorePatterns) {
     this.enableDefaultIgnorePatterns = enableDefaultIgnorePatterns;
   }
 
+  /**
+   * getCustomIgnorePatterns.
+   *
+   * @return customIgnorePatterns
+   */
   public List<String> getCustomIgnorePatterns() {
     return customIgnorePatterns;
   }
 
+  /**
+   * setCustomIgnorePatterns.
+   *
+   * @param customIgnorePatterns customIgnorePatterns
+   */
   public void setCustomIgnorePatterns(List<String> customIgnorePatterns) {
     this.customIgnorePatterns = customIgnorePatterns;
   }
 
+  /**
+   * isEnableDefaultMessageChecking.
+   *
+   * @return enableDefaultMessageChecking
+   */
   public boolean isEnableDefaultMessageChecking() {
     return enableDefaultMessageChecking;
   }
 
+  /**
+   * setEnableDefaultMessageChecking.
+   *
+   * @param enableDefaultMessageChecking enableDefaultMessageChecking
+   */
   public void setEnableDefaultMessageChecking(boolean enableDefaultMessageChecking) {
     this.enableDefaultMessageChecking = enableDefaultMessageChecking;
   }
 
+  /**
+   * getCustomCheckingMethods.
+   *
+   * @return customCheckingMethods
+   */
   public List<String> getCustomCheckingMethods() {
     return customCheckingMethods;
   }
 
+  /**
+   * setCustomCheckingMethods.
+   *
+   * @param customCheckingMethods customCheckingMethods
+   */
   public void setCustomCheckingMethods(List<String> customCheckingMethods) {
     this.customCheckingMethods = customCheckingMethods;
   }
 
+  /**
+   * isEnableDefaultCommitSubjectTypes.
+   *
+   * @return enableDefaultCommitSubjectTypes
+   */
   public boolean isEnableDefaultCommitSubjectTypes() {
     return enableDefaultCommitSubjectTypes;
   }
 
+  /**
+   * setEnableDefaultCommitSubjectTypes.
+   *
+   * @param enableDefaultCommitSubjectTypes enableDefaultCommitSubjectTypes
+   */
   public void setEnableDefaultCommitSubjectTypes(boolean enableDefaultCommitSubjectTypes) {
     this.enableDefaultCommitSubjectTypes = enableDefaultCommitSubjectTypes;
   }
 
+  /**
+   * getCustomCommitSubjectTypes.
+   *
+   * @return customCommitSubjectTypes
+   */
   public List<String> getCustomCommitSubjectTypes() {
     return customCommitSubjectTypes;
   }
 
+  /**
+   * setCustomCommitSubjectTypes.
+   *
+   * @param customCommitSubjectTypes customCommitSubjectTypes
+   */
   public void setCustomCommitSubjectTypes(List<String> customCommitSubjectTypes) {
     this.customCommitSubjectTypes = customCommitSubjectTypes;
   }
 
+  /**
+   * isEnableForcingSubjectEndsWithCommaErrorCheck.
+   *
+   * @return enableForcingSubjectEndsWithCommaErrorCheck
+   */
   public boolean isEnableForcingSubjectEndsWithCommaErrorCheck() {
     return enableForcingSubjectEndsWithCommaErrorCheck;
   }
 
+  /**
+   * setEnableForcingSubjectEndsWithCommaErrorCheck.
+   *
+   * @param enableForcingSubjectEndsWithCommaErrorCheck enableForcingSubjectEndsWithCommaErrorCheck
+   */
   public void setEnableForcingSubjectEndsWithCommaErrorCheck(boolean enableForcingSubjectEndsWithCommaErrorCheck) {
     this.enableForcingSubjectEndsWithCommaErrorCheck = enableForcingSubjectEndsWithCommaErrorCheck;
   }
 
+  /**
+   * isEnableForcingNewLineBetweenSubjectAndBodyCheck.
+   *
+   * @return enableForcingNewLineBetweenSubjectAndBodyCheck
+   */
   public boolean isEnableForcingNewLineBetweenSubjectAndBodyCheck() {
     return enableForcingNewLineBetweenSubjectAndBodyCheck;
   }
 
+  /**
+   * setEnableForcingNewLineBetweenSubjectAndBodyCheck.
+   *
+   * @param enableForcingNewLineBetweenSubjectAndBodyCheck enableForcingNewLineBetweenSubjectAndBodyCheck
+   */
   public void setEnableForcingNewLineBetweenSubjectAndBodyCheck(boolean enableForcingNewLineBetweenSubjectAndBodyCheck) {
     this.enableForcingNewLineBetweenSubjectAndBodyCheck = enableForcingNewLineBetweenSubjectAndBodyCheck;
   }
+
+  /**
+   * getIgnorePatterns.
+   *
+   * @return ignorePatterns
+   */
   public List<Pattern> getIgnorePatterns() {
     return ignorePatterns;
   }
 
+  /**
+   * getSubjectTypeList.
+   *
+   * @return subjectTypeList
+   */
   public Set<String> getSubjectTypeList() {
     return subjectTypeList;
   }

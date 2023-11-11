@@ -16,16 +16,23 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+// todo: add custom checking method. https://github.com/Kambaa/gmc-maven-plugin/blob/1323d032130f067eaab41ba7ee9b17619699c464/src/main/java/dev/kambaabi/MyMojo.java
+
 /**
  * Checks commit message.
  */
-// todo: add custom checking method. https://github.com/Kambaa/gmc-maven-plugin/blob/1323d032130f067eaab41ba7ee9b17619699c464/src/main/java/dev/kambaabi/MyMojo.java
 @Mojo(name = "checkFile"
     // ,
     // requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
     // defaultPhase = LifecyclePhase.COMPILE
 )
 public class CheckFile extends MyBaseMojo {
+
+  /**
+   * Constructor.
+   */
+  public CheckFile() {
+  }
 
   /**
    * File name containing the commit messages.
@@ -131,25 +138,56 @@ public class CheckFile extends MyBaseMojo {
     }
   }
 
+  /**
+   * getFile.
+   *
+   * @return file
+   */
   public String getFile() {
     return file;
   }
 
+  /**
+   * setFile.
+   *
+   * @param file file
+   */
   public void setFile(String file) {
     this.file = file;
   }
 
+  /**
+   * getSeparator.
+   *
+   * @return separator
+   */
   public String getSeparator() {
     return separator;
   }
 
+  /**
+   * setSeparator.
+   *
+   * @param separator separator
+   */
   public void setSeparator(String separator) {
     this.separator = separator;
   }
+
+  /**
+   * getCommitMessageList.
+   *
+   * @return commitMessageList
+   */
   public List<String> getCommitMessageList() {
     return commitMessageList;
   }
 
+  /**
+   * getIgnoreFilteredCommitMessageList.
+   *
+   * @return ignoreFilteredCommitMessageList
+   */
   public List<String> getIgnoreFilteredCommitMessageList() {
     return ignoreFilteredCommitMessageList;
   }

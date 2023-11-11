@@ -71,6 +71,12 @@ public class Utils {
    */
   public static final String COMMIT_MESSAGE_SPLITTING_REGEX = "^(\\w*)(?:\\(([\\w\\-.]+)\\))?(!)?: (.*)(\\n[\\s\\S]*)?";
 
+  /**
+   * Dummy check message
+   *
+   * @param msg message to check
+   * @return just returns true
+   */
   public static boolean dummyCheckMessage(String msg) {
     return true;
   }

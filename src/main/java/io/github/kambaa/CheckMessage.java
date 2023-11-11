@@ -16,6 +16,12 @@ import org.apache.maven.plugins.annotations.Parameter;
 )
 public class CheckMessage extends MyBaseMojo {
 
+  /**
+   * Constructor.
+   */
+  public CheckMessage() {
+  }
+
   @Parameter
   private String commitMessage;
 
@@ -33,10 +39,20 @@ public class CheckMessage extends MyBaseMojo {
     }
   }
 
+  /**
+   * getCommitMessage.
+   *
+   * @return commitMessage
+   */
   public String getCommitMessage() {
     return commitMessage;
   }
 
+  /**
+   * setCommitMessage.
+   *
+   * @param commitMessage commitMessage
+   */
   public void setCommitMessage(String commitMessage) {
     this.commitMessage = commitMessage;
   }
