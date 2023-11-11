@@ -1,0 +1,22 @@
+<!-- src/test/resources/test-project/pom2.xml -->
+<project>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.github.kambaa</groupId>
+                <artifactId>gmc-maven-plugin</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <configuration>
+                    <skip>false</skip>
+                    <failOnError>true</failOnError>
+<!--                    <commitMessage>feat: testing for the first poc-->
+
+<!--                        added poc notes on the readme file-->
+<!--                    </commitMessage>-->
+
+
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

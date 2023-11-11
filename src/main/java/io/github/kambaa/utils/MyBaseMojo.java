@@ -200,6 +200,7 @@ public class MyBaseMojo extends AbstractMojo {
     }
 
     String[] splitStr = commitMessage.split("\n");
+    // todo: remove this if becaouse isEmpty check covers this.
     if (splitStr.length == 0) {
       throw new MojoFailureException(String.format("Commit message can not be parsed! Commit message: %s", commitMessage));
     }
