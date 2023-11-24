@@ -1,0 +1,40 @@
+<!-- src/test/resources/test-project/pom2.xml -->
+<project>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.github.kambaa</groupId>
+    <artifactId>gmc-maven-plugin</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven.plugin-testing</groupId>
+            <artifactId>maven-plugin-testing-harness</artifactId>
+            <version>4.0.0-alpha-1</version> <!-- Use the latest version -->
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.github.kambaa</groupId>
+                <artifactId>gmc-maven-plugin</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <configuration>
+                    <skip>false</skip>
+                    <failOnError>true</failOnError>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>checkMsg</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+            </plugin>
+        </plugins>
+    </build>
+</project>
