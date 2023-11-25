@@ -50,7 +50,7 @@ jobs:
 
       # Sonar Checks
       - name: Sonar Cloud Checks
-        run: mvn verify sonar:sonar -Dsonar.token= $SONAR_TOKEN -Dsonar.host.url=sonarcloud.io -Dsonar.organization=KambaAbi -Dsonar.projectKey=Kambaa_gmc-maven-plugin
+        run: mvn sonar:sonar -Dsonar.token= $SONAR_TOKEN -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization=KambaAbi -Dsonar.projectKey=Kambaa_gmc-maven-plugin
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
@@ -75,7 +75,7 @@ jobs:
       #        run: mvn verify
       #
       - name: Publish to Apache Maven Central
-        run: mvn deploy -DskipTests
+        run: mvn verify deploy -DskipTests
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
