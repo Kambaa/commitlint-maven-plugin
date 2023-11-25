@@ -40,6 +40,10 @@ jobs:
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
+      # Sonar Checks
+      - name: Verify
+        run: mvn sonar:sonar -Pcoverage
+
       # JACOCO REPORT FILE UPLOAD..
       - name: Upload jacoco coverage
         uses: actions/upload-artifact@v3

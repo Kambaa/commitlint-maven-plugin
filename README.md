@@ -3,6 +3,16 @@
 [![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/io.github.kambaa/gmc-maven-plugin?server=https%3A%2F%2Fs01.oss.sonatype.org)](https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/kambaa/gmc-maven-plugin/0.0.1-SNAPSHOT/)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/Kambaa/gmc-maven-plugin/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Kambaa/gmc-maven-plugin/tree/master)
 
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Kambaa_gmc-maven-plugin&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Kambaa_gmc-maven-plugin)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Kambaa_gmc-maven-plugin&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Kambaa_gmc-maven-plugin)[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Kambaa_gmc-maven-plugin&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Kambaa_gmc-maven-plugin)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Kambaa_gmc-maven-plugin&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Kambaa_gmc-maven-plugin)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Kambaa_gmc-maven-plugin&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Kambaa_gmc-maven-plugin)
+
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=Kambaa_gmc-maven-plugin&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=Kambaa_gmc-maven-plugin)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=Kambaa_gmc-maven-plugin&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=Kambaa_gmc-maven-plugin)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Kambaa_gmc-maven-plugin&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=Kambaa_gmc-maven-plugin)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=Kambaa_gmc-maven-plugin&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=Kambaa_gmc-maven-plugin)
+
 A maven plugin that checks given commit messages
 
 In our company, for our maven projects, we use js solutions for commit message convention checking, so i wanted to write
