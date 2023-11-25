@@ -18,37 +18,6 @@ extra unnecessary checks or configurations.
     <artifactId>gmc-maven-plugin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <configuration>
-
-        <!--
-            <multipleGitLogMessages>
-             
-                Enter your historical git log messages here 
-                with splitting value, default is:
-                ------------------------ >8 ------------------------
-                or customize you can customize it.
-                
-            </multipleGitLogMessages>
-
-            <multipleGitLogMessageSplitter>
-                (OPTIONAL) Enter your custom splitting text for the plugin to understand. 
-                Again default value is:
-                ------------------------ >8 ------------------------
-            </multipleGitLogMessageSplitter>
-        -->
-
-        <!-- Test or validate a single message -->
-        <testCommitMessage>
-            feat: some message that is way too long and breaks the line max-length
-
-            awdawdawdawdawdawd aw da aw aw dawd awd aw
-
-            seni Allah bildiği gibi yapsın
-
-            awdawd
-
-            www
-        </testCommitMessage>
-
         <!-- (OPTIONAL): fail maven build on error. Default: true -->
         <failOnError>true</failOnError>
         <!-- (OPTIONAL): skips this plugin's execution. Default: false -->
@@ -172,3 +141,4 @@ Only issue for me to see that there's a newline added between them in `command-o
 - https://github.com/conventional-changelog/commitlint/blob/master/%40commitlint/cli/fixtures/parser-preset/parser-preset.js
 - https://github.com/conventional-changelog/conventional-changelog/blob/eb3ab7bcd2266cd751e94c583510c8a85216a027/packages/git-raw-commits/index.js
 - https://gist.github.com/s4y/1215700
+- https://stackoverflow.com/a/40206597
