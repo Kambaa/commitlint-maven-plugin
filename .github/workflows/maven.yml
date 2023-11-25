@@ -33,7 +33,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE  # env variable for GPG private key passphrase
 
       # VERIFY NEEDS GPG PASSPHRASE FOR THE SIGNING, added in env.
-      - name: Verify
+      - name: Maven Verify
         run: mvn --batch-mode --update-snapshots verify
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
@@ -41,12 +41,8 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       # Sonar Checks
-      - name: Verify
-        run: mvn clean verify sonar:sonar \
-            -Dsonar.token= $SONAR_TOKEN \
-            -Dsonar.host.url='https://sonarcloud.io' \
-            -Dsonar.organization=KambaAbi \
-            -Dsonar.projectKey=Kambaa_gmc-maven-plugin
+      - name: Sonar Cloud Checks
+        run: mvn clean verify sonar:sonar -Dsonar.token= $SONAR_TOKEN -Dsonar.host.url=sonarcloud.io -Dsonar.organization=KambaAbi -Dsonar.projectKey=Kambaa_gmc-maven-plugin
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
