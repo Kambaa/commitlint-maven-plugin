@@ -50,7 +50,7 @@ jobs:
 
       # Sonar Checks
       - name: Sonar Cloud Checks
-        run: mvn sonar:sonar -Dsonar.token= $SONAR_TOKEN -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization=KambaAbi -Dsonar.projectKey=Kambaa_gmc-maven-plugin
+        run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar:sonar -Dsonar.token= $SONAR_TOKEN -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization=KambaAbi -Dsonar.projectKey=Kambaa_gmc-maven-plugin
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
