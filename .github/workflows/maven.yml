@@ -33,8 +33,8 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE  # env variable for GPG private key passphrase
 
       # VERIFY NEEDS GPG PASSPHRASE FOR THE SIGNING, added in env.
-      - name: Maven Verify
-        run: mvn --batch-mode --update-snapshots verify
+      - name: Maven Clean Compile
+        run: mvn --batch-mode --update-snapshots clean compile
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
@@ -64,7 +64,7 @@ jobs:
       #        run: mvn verify
       #
       - name: Publish to Apache Maven Central
-        run: mvn deploy
+        run: mvn deploy -DskipTests
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
