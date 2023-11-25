@@ -49,13 +49,17 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       # Sonar Checks
-      - name: Sonar Cloud Checks
-        run: mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar:sonar -Dsonar.token= $SONAR_TOKEN -Dsonar.host.url="https://sonarcloud.io" -Dsonar.organization=KambaAbi -Dsonar.projectKey=Kambaa_gmc-maven-plugin
+      - name: Analyze with SonarCloud
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.organization=KambaAbi
+            -Dsonar.projectKey=Kambaa_gmc-maven-plugin
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/
+            -Dsonar.verbose=true
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       # JACOCO REPORT FILE UPLOAD..
       - name: Upload jacoco coverage
