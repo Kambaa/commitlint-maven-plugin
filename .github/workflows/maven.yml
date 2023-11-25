@@ -40,11 +40,22 @@ jobs:
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
+      # VERIFY NEEDS GPG PASSPHRASE FOR THE SIGNING, added in env.
+      - name: Maven Test
+        run: mvn --batch-mode test
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
       # Sonar Checks
       - name: Sonar Cloud Checks
-        run: mvn clean verify sonar:sonar -Dsonar.token= $SONAR_TOKEN -Dsonar.host.url=sonarcloud.io -Dsonar.organization=KambaAbi -Dsonar.projectKey=Kambaa_gmc-maven-plugin
+        run: mvn verify sonar:sonar -Dsonar.token= $SONAR_TOKEN -Dsonar.host.url=sonarcloud.io -Dsonar.organization=KambaAbi -Dsonar.projectKey=Kambaa_gmc-maven-plugin
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       # JACOCO REPORT FILE UPLOAD..
       - name: Upload jacoco coverage
