@@ -41,4 +41,12 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Kambaa_gmc-maven-plugin -Pcoverage
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/
+
+      # JACOCO REPORT FILE UPLOAD..
+      - name: Upload jacoco coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-results-report
+          path: target/site/jacoco/
+          if-no-files-found: error

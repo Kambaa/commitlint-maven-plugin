@@ -48,14 +48,6 @@ jobs:
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      # JACOCO REPORT FILE UPLOAD..
-      - name: Upload jacoco coverage
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-results-report
-          path: target/site/jacoco/
-          if-no-files-found: error
-
       #      - name: Clean & Compile
       #        run: mvn clean compile
       #
@@ -66,7 +58,7 @@ jobs:
       #        run: mvn verify
       #
       - name: Publish to Apache Maven Central
-        run: mvn verify deploy -DskipTests
+        run: mvn deploy -DskipTests
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
