@@ -632,4 +632,10 @@ public class MyBaseMojo extends AbstractMojo {
     return subjectTypeList;
   }
 
+  /**
+   * Read value from given key from command line arguments.
+   * @return
+   */
+  // public String readFromArgument(String )
+
 }

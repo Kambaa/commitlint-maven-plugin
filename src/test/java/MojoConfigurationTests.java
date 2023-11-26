@@ -1,5 +1,3 @@
-package io.github.kambaa;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -7,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
+import io.github.kambaa.CheckMessage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

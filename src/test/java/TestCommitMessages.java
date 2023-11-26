@@ -1,5 +1,3 @@
-package io.github.kambaa;
-
 /**
  * Test Commit Messages.
  */
