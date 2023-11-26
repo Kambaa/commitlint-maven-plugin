@@ -29,7 +29,7 @@ public class MojoConfigurationTests {
 
   @Before
   public void init() throws Exception {
-    File testPom = new File("src\\test\\resources\\test-project").getAbsoluteFile();
+    File testPom = new File("src/test/resources/test-project").getAbsoluteFile();
     assertNotNull(testPom);
     assertTrue(testPom.exists());
     mojo = (CheckMessage) rule.lookupConfiguredMojo(testPom, "checkMsg");
