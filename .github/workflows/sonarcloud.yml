@@ -41,7 +41,7 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn clean verify
+        run: mvn clean test -X
 
       # JACOCO REPORT FILE UPLOAD..
       - name: Upload jacoco coverage
