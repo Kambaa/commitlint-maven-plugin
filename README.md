@@ -133,6 +133,7 @@ Only issue for me to see that there's a newline added between them in `command-o
 
 ### Some links that i inspired from:
 
+- https://gist.github.com/Kambaa/410923120ce4ae673ddd44203847e0ce
 - https://github.com/Rugal/commitlinter-maven-plugin
 - https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#rules
 - https://www.conventionalcommits.org/en/v1.0.0/
@@ -152,3 +153,4 @@ Only issue for me to see that there's a newline added between them in `command-o
 - https://github.com/conventional-changelog/conventional-changelog/blob/eb3ab7bcd2266cd751e94c583510c8a85216a027/packages/git-raw-commits/index.js
 - https://gist.github.com/s4y/1215700
 - https://stackoverflow.com/a/40206597
+
