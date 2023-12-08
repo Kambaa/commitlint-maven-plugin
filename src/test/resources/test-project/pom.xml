@@ -32,6 +32,13 @@
                             <goal>checkMsg</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>checkPiped</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>checkPiped</goal>
+                        </goals>
+                    </execution>
                 </executions>
 
             </plugin>
