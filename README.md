@@ -50,6 +50,12 @@ or add `<pluginGroup>gmc-maven-plugin</pluginGroup>` to your plugin groups in yo
 mvn gmc:check -DmultipleGitLogMessages=<COMBINED_LOG_MESSAGES_HERE>
 ```
 
+or use piping: (TODO: add multiple git log)
+```shell
+ cat .git/COMMIT_EDITMSG | mvn io.github.kambaa:gmc-maven-plugin:checkPiped
+```
+
+
 ## My thoughts on current solution:
 
 Apperantly the js solution:
