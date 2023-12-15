@@ -1,10 +1,11 @@
+package io.github.kambaa;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import io.github.kambaa.CheckFile;
 import io.github.kambaa.utils.Utils;
 import java.io.File;
 import org.apache.maven.plugin.MojoFailureException;
@@ -14,7 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 /**
- * FileCheckingTests.
+ * io.github.kambaa.FileCheckingTests.
  * junit 4 test.
  * https://maven.apache.org/plugin-testing/maven-plugin-testing-harness/getting-started/index.html#create-a-mymojotest
  */

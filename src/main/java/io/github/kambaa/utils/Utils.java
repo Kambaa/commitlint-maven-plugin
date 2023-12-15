@@ -58,7 +58,7 @@ public class Utils {
    * Default splitting text(without quotes).
    * "\n------------------------ &gt;8 ------------------------\n"
    */
-  public static final String DEFAULT_SEPARATOR = "\n------------------------ >8 ------------------------\n";
+  public static final String DEFAULT_SEPARATOR = "%n------------------------ >8 ------------------------%n";
 
   /**
    * Default subject type list. Which are:
