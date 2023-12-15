@@ -37,20 +37,7 @@ extra unnecessary checks or configurations.
 
 ```
 
-You can get the log messages with `git` command, get the list of commit messages to check, and give it to this plugin
-like this:
-
-```shell
-mvn io.github.kambaa:gmc-maven-plugin:check -DmultipleGitLogMessages=<COMBINED_LOG_MESSAGES_HERE>
-```
-
-or add `<pluginGroup>gmc-maven-plugin</pluginGroup>` to your plugin groups in your `settings.xml`, and call like this:
-
-```shell
-mvn gmc:check -DmultipleGitLogMessages=<COMBINED_LOG_MESSAGES_HERE>
-```
-
-or use piping: (TODO: add multiple git log)
+use piping: (TODO: add multiple git log)
 ```shell
  cat .git/COMMIT_EDITMSG | mvn io.github.kambaa:gmc-maven-plugin:checkPiped
 ```
