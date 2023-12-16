@@ -43,7 +43,7 @@ public class CheckViaProcessTests {
     // Mock the ProcessBuilder behavior
     // ProcessBuilder mockProcessBuilder = Mockito.mock(ProcessBuilder.class);
     // Mockito.when(mockProcessBuilder.command()).thenReturn(Arrays.asList("git", "log", "--format=%B%n------------------------ >8 ------------------------"));
-    mojo.setStart("a2d28a95");
+    mojo.setStart("33a15e");
     mojo.setEnd("HEAD");
     mojo.execute();
 
