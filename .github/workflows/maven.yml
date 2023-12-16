@@ -43,13 +43,13 @@ jobs:
 
       - name: git version
         run: git --version
-      - name: git version
+      - name: git config
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           git status
       - name: git rev-parse
-        run: git rev-parse --verify 33a15e
+        run: git rev-parse --verify "33a15e" -- $GITHUB_WORKSPACE
       - name: git test log2
         run: git log "33a15e..HEAD" -- $GITHUB_WORKSPACE
 
