@@ -5,13 +5,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.testing.MojoRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * FileCheckingTests.
@@ -43,8 +41,8 @@ public class CheckViaProcessTests {
 
 
     // Mock the ProcessBuilder behavior
-    ProcessBuilder mockProcessBuilder = Mockito.mock(ProcessBuilder.class);
-    Mockito.when(mockProcessBuilder.command()).thenReturn(Arrays.asList("git", "log", "--format=%B%n------------------------ >8 ------------------------"));
+    // ProcessBuilder mockProcessBuilder = Mockito.mock(ProcessBuilder.class);
+    // Mockito.when(mockProcessBuilder.command()).thenReturn(Arrays.asList("git", "log", "--format=%B%n------------------------ >8 ------------------------"));
     mojo.setStart("a2d28a95");
     mojo.setEnd("HEAD");
     mojo.execute();

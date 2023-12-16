@@ -5,12 +5,15 @@ import static io.github.kambaa.utils.Utils.DEFAULT_COMMIT_MESSAGE_SUBJECT_TYPES;
 import static io.github.kambaa.utils.Utils.isEmpty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -119,6 +122,13 @@ public class MyBaseMojo extends AbstractMojo {
   protected List<String> customIgnorePatterns;
 
   /**
+   * Separator used in the git log command.
+   * Default is Utils.DEFAULT_SEPARATOR
+   */
+  @Parameter(defaultValue = Utils.DEFAULT_SEPARATOR)
+  protected String separator = Utils.DEFAULT_SEPARATOR;
+
+  /**
    * Ignore commit message patterns list.
    * Both initial and custom patterns will be filled here upon execution.
    */
@@ -190,6 +200,54 @@ public class MyBaseMojo extends AbstractMojo {
       ignorePatterns.add(Pattern.compile("^Auto-merged (.*?) into (.*)"));
       ignorePatterns.add(Pattern.compile("^([Cc])hore(\\([^)]+\\))?:"));
     }
+  }
+
+  /**
+   * Splits given commit messages (generated via the git log command) by the given separator.
+   *
+   * @param gitLogMessages String value of git log --format='%B%n{GIVEN_SEPARATOR}'.
+   * @param separator      separator used on the git log command.
+   * @return List of strings that each one represents one of the commit messages.
+   * @throws MojoFailureException err
+   */
+  protected List<String> splitCommitMessagesFromGivenLogString(String gitLogMessages, String separator) throws MojoFailureException {
+    if (gitLogMessages.contains("\r\n")) {
+      debug("Given text contains `\\r\\n`, first replacing them with `\\n`");
+      gitLogMessages = gitLogMessages.replace("\r\n", "\n");
+    }
+    if (!gitLogMessages.contains(separator)) {
+      debug("Given file does not contain any separator string!");
+      throw new MojoFailureException("Given file does not contain separator text! are you sure you are giving the `git log` with separator command result?");
+    }
+    String[] commitMsgArr = gitLogMessages.split(separator);
+    if (isEmpty(commitMsgArr)) {
+      debug("Seperation result is empty, returning null!\n\tSeparator: %s\n\tGitLogMessages: %s ", separator, gitLogMessages);
+      return Collections.emptyList();
+    }
+    List<String> out = Stream.of(commitMsgArr).map(s -> {
+      // Trim new lines at the beginning and at the end of each split commit message(which is written by git log command.
+      return s.replaceAll("(?m)^\\s*", "").replaceAll("(?m)\\s*$", "");
+    }).collect(Collectors.toList());
+    if (isEmpty(out)) {
+      debug("Extraction result array is empty, throwing exception!");
+      throw new MojoFailureException("No commit messages extracted from the given file!");
+    }
+    return out;
+  }
+
+  protected List<String> filterOutIgnoredCommits(List<String> commitMessagesToCheck) {
+    List<String> out = commitMessagesToCheck.stream()
+        .filter(s -> ignorePatterns.stream()
+            .noneMatch(pattern -> pattern.matcher(s).find())
+        )
+        .collect(Collectors.toList());
+    if (mavenDebug) {
+      List<String> ignoredCommits = commitMessagesToCheck.stream()
+          .filter(element -> !out.contains(element))
+          .collect(Collectors.toList());
+      debug("These %d commits are filtered through ignore patterns:\n--> %s", ignoredCommits.size(), String.join("\n--> ", ignoredCommits));
+    }
+    return out;
   }
 
   /**
