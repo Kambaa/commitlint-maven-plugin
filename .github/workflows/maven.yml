@@ -40,13 +40,15 @@ jobs:
           MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_SERVER_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      # VERIFY NEEDS GPG PASSPHRASE FOR THE SIGNING, added in env.
       - name: git version
         run: |
           git --version
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           git status
+          git log --format="%B%n------------------------ >8 ------------------------" 33a15e..HEAD
+
+      # VERIFY NEEDS GPG PASSPHRASE FOR THE SIGNING, added in env.
       - name: Maven Test
         run: mvn --batch-mode verify
         env:
