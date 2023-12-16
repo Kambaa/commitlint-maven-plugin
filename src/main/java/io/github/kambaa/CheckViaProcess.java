@@ -59,6 +59,7 @@ public class CheckViaProcess extends MyBaseMojo {
       int exitCode = process.waitFor();
       if (exitCode != 0) {
         getLog().error("Error executing git log command: exit code " + exitCode);
+        getLog().error(outputBuilder.toString().trim());
         throw new MojoExecutionException("Git log command failed! exit code " + exitCode);
       }
       return outputBuilder.toString().trim();
