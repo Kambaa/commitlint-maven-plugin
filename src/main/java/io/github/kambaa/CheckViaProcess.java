@@ -31,6 +31,12 @@ public class CheckViaProcess extends MyBaseMojo {
     super.execute();
     // TODO: enhance, refactor git command and add commit validation
     String commandOutput = getGitLogOutput(getStart(), getEnd());
+    List<String> commitList = filterOutIgnoredCommits(
+        splitCommitMessagesFromGivenLogString(commandOutput, separator)
+    );
+    for (String msg : commitList) {
+      checkCommitMessage(msg);
+    }
   }
 
   public String getGitLogOutput(String startCommit, String endCommit) throws MojoFailureException {

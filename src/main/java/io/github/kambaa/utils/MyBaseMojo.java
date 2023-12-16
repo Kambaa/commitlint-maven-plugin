@@ -235,6 +235,12 @@ public class MyBaseMojo extends AbstractMojo {
     return out;
   }
 
+  /**
+   * Filters Out Ignored Commits from given commit messages.
+   *
+   * @param commitMessagesToCheck commit messages list.
+   * @return List filtered out commit message list.
+   */
   protected List<String> filterOutIgnoredCommits(List<String> commitMessagesToCheck) {
     List<String> out = commitMessagesToCheck.stream()
         .filter(s -> ignorePatterns.stream()
