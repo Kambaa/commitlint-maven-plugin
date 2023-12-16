@@ -47,7 +47,7 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           git status
-          git log HEAD -- $GITHUB_WORKSPACE
+          git log 33a15e..HEAD -- $GITHUB_WORKSPACE
 
       # VERIFY NEEDS GPG PASSPHRASE FOR THE SIGNING, added in env.
       - name: Maven Test
