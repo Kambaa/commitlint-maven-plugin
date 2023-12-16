@@ -63,6 +63,7 @@ public class CheckViaProcess extends MyBaseMojo {
       }
       return outputBuilder.toString().trim();
     } catch (Exception e) {
+      e.printStackTrace();
       throw new MojoFailureException("Error retrieving git log output", e);
     }
   }
