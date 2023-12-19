@@ -146,4 +146,5 @@ Only issue for me to see that there's a newline added between them in `command-o
 - https://github.com/conventional-changelog/conventional-changelog/blob/eb3ab7bcd2266cd751e94c583510c8a85216a027/packages/git-raw-commits/index.js
 - https://gist.github.com/s4y/1215700
 - https://stackoverflow.com/a/40206597
+- https://github.com/leandroaparecido/branch-maven-plugin/blob/d88b91a2e2fccdfed4ffb4b134b9f2811be4222b/src/main/java/com/github/lehphyro/branchplugin/MaintenanceMojo.java#L207
 
